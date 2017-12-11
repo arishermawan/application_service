@@ -1,4 +1,8 @@
-class User < ApplicationRecord
+class Driver < ApplicationRecord
+  enum type: {
+    "GoRide" => 1,
+    "GoCar" => 2
+  }
 
   has_secure_password
 
