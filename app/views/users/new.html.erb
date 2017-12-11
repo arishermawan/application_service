@@ -1,0 +1,14 @@
+<% type = request.fullpath.split('/').reject { |e| e.empty? }.first%>
+<% url_form = type == 'driver' ? driver_signup_path : customer_signup_path %>
+
+<% provide(:urls, url_form) %>
+<% provide(:button_text, 'Create my Go-jek account') %>
+<h1>Sign Up</h1>
+<p style="text-align: center
+">Please Sign up! Thank you..</p>
+
+<div class="row">
+  <div class="col-sm-6 col-sm-offset-3">
+    <%= render 'form' %>
+  </div>
+</div>
