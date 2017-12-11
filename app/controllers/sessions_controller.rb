@@ -6,7 +6,8 @@ class SessionsController < ApplicationController
   end
 
   def create
-    user = User.find_by(email: params[:session][:email].downcase)
+    type = request.fullpath.split('/').reject { |e| e.to_s.empty? }.first
+    user = type.capitalize.constantize.find_by(email: params[:session][:email].downcase)
     if user && user.authenticate(params[:session][:password])
       log_in user
       redirect_to user

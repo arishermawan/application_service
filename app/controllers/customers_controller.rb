@@ -58,6 +58,6 @@ class CustomersController < ApplicationController
 
     def correct_customer
       @customer = Customer.find(params[:id])
-      redirect_to(root_url) unless @customer == current_customer
+      redirect_to(root_url) unless @customer == current_user
     end
 end

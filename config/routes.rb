@@ -2,6 +2,7 @@ Rails.application.routes.draw do
 
   root 'sessions#new'
   get 'sessions/new'
+  post 'sessions/create'
 
   resources :users
   resources :customers

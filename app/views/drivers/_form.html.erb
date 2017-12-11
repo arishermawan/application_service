@@ -1,5 +1,5 @@
 <%= form_for(@driver, url: driver_signup_path) do |f| %>
-  <%= render 'shared/error_messages' %>
+  <%= render 'error_messages' %>
 
   <%= f.label :name %>
   <%= f.text_field :name, class: 'form-control' %>
@@ -9,6 +9,9 @@
 
   <%= f.label :phone %>
   <%= f.text_field :phone, class: 'form-control' %>
+
+  <%= f.label :type %>
+  <%= f.select :type, Driver.services.keys, prompt:"Select a service type", "class"=>'form-control'%>
 
   <%= f.label :password %>
   <%= f.password_field :password, class: 'form-control' %>

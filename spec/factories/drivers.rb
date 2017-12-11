@@ -6,7 +6,7 @@ FactoryGirl.define do
     gopay "9.99"
     phone "0823102323023"
     location "MyString"
-    type 1
+    service "goride"
     password "abc123"
     password_confirmation "abc123"
   end
@@ -16,7 +16,7 @@ FactoryGirl.define do
     email nil
     gopay nil
     phone nil
-    type nil
+    service nil
     password nil
     password_confirmation nil
   end

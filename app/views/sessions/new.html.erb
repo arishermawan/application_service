@@ -3,7 +3,10 @@
 
 <div class="row">
   <div class="col-sm-6 col-sm-offset-3">
-    <%= form_for(:session, url: login_path) do |f| %>
+  <% type = request.fullpath.split('/').reject { |e| e.empty? }.first%>
+  <% url_form = type == 'driver' ? driver_login_path : customer_login_path %>
+
+    <%= form_for(:session, url: url_form) do |f| %>
 
       <%= f.label :email %>
       <%= f.email_field :email, class: 'form-control' %>

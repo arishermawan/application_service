@@ -87,4 +87,10 @@ RSpec.describe Driver, type: :model do
     expect(driver.errors['password']).to include('is too short (minimum is 6 characters)')
   end
 
+  it "is invalid without a type" do
+    driver = build(:driver, service: nil)
+    driver.valid?
+    expect(driver.errors[:service]).to include("is not included in the list")
+  end
+
 end
