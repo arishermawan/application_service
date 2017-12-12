@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171211074430) do
+ActiveRecord::Schema.define(version: 20171212033331) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,6 +37,20 @@ ActiveRecord::Schema.define(version: 20171211074430) do
     t.string "password_digest"
   end
 
+  create_table "orders", force: :cascade do |t|
+    t.string "pickup"
+    t.string "destination"
+    t.integer "payment"
+    t.decimal "distance"
+    t.decimal "total"
+    t.bigint "customer_id"
+    t.bigint "driver_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["customer_id"], name: "index_orders_on_customer_id"
+    t.index ["driver_id"], name: "index_orders_on_driver_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -48,4 +62,6 @@ ActiveRecord::Schema.define(version: 20171211074430) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
+  add_foreign_key "orders", "customers"
+  add_foreign_key "orders", "drivers"
 end

@@ -5,7 +5,6 @@ FactoryGirl.define do
     email "aris@gmail.com"
     gopay "9.99"
     phone "0823102323023"
-    location "MyString"
     service "goride"
     password "abc123"
     password_confirmation "abc123"

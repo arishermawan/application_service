@@ -7,6 +7,7 @@ Rails.application.routes.draw do
   resources :users
   resources :customers
   resources :drivers
+  resources :orders
 
   get  '/signup',  to: 'customers#new'
   get  '/customer/signup',  to: 'customers#new'
