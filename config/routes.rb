@@ -29,6 +29,10 @@ Rails.application.routes.draw do
   get '/drivers/:id/set_location',  to: 'drivers#set_location', as: 'set_location'
   patch '/drivers/:id/set_location',  to: 'drivers#commit_location', as: 'commit_location'
 
+  get 'orders/confirm'
+  post 'orders/check', to: 'orders#check', as: 'check_order'
+  post 'orders/create', to: 'orders#create', as: 'place_order'
+
   # get '/users/:id/topup', to: 'users#topup', as: 'user_topup'
 
 

@@ -11,12 +11,30 @@ class OrdersController < ApplicationController
     @order = Order.new
   end
 
+  def check
+    @order = Order.new(order_params)
+
+    @order.customer_id = session[:user_id]
+    respond_to do |format|
+      if @order.valid?
+        format.html{render :confirm}
+      else
+        format.html{render :new}
+      end
+    end
+  end
+
+  def confirm
+    @order = Order.new(order_params)
+  end
+
   def create
     @order = Order.new(order_params)
 
+    @order.customer_id = session[:user_id]
     respond_to do |format|
-      if @order.save
-        format.html{render :show, notice: "orders succesfully saved"}
+      if @order.save?
+        format.html{render :show}
       else
         format.html{render :new}
       end

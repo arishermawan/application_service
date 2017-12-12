@@ -1,0 +1,40 @@
+
+<% provide(:button_text, 'Place Order') %>
+<h1>Confirm Order</h1>
+<p style="text-align: center
+">Please ensure input the details below..</p>
+
+
+<div class="row">
+  <div class="col-sm-6 col-sm-offset-3">
+  <%= form_for(@order, url:place_order_path) do |f| %>
+    <%= render 'error_messages' %>
+
+    <%= f.label :pickup %>
+    <%= f.text_field :pickup, readonly: true, class: 'form-control' %>
+
+    <%= f.label :destination %>
+    <%= f.text_field :destination, readonly: true, class: 'form-control' %>
+
+    <table class="table">
+      <tr>
+        <td>Payment Type</td>
+        <td><%= @order.payment %></td>
+      </tr>
+
+      <tr>
+        <td>Distance</td>
+        <td><%= @order.distance.to_f / 1000 %> Km</td>
+      </tr>
+
+      <tr>
+        <td>Total Cost</td>
+        <td><%= @order.distance.to_f / 1000 * 1500 %></td>
+      </tr>
+
+    </table>
+
+    <%= f.submit yield(:button_text), class: "btn btn-primary" %>
+  <% end %>
+  </div>
+</div>

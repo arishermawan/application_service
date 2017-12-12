@@ -28,5 +28,24 @@ RSpec.describe Order, type: :model do
     expect(order.errors[:payment]).to include("can't be blank")
   end
 
+  it "is invalid with wrong pick up address" do
+    order = build(:order, pickup: "azsxdcfewasqfx")
+    order.valid?
+    expect(order.errors[:pickup]).to include("is not found")
+  end
+
+  it "is invalid with wrong destination address" do
+    order = build(:order, destination: "azsxdcfewasqfx")
+    order.valid?
+    expect(order.errors[:destination]).to include("is not found")
+  end
+
+  it "is invalid with inssufficient gopay balance" do
+    customer = create(:customer)
+    order = build(:order, total: 10000)
+    order.valid?
+    expect(order.errors[:payment]).to include("gopay credit isn't enough")
+  end
+
 
 end

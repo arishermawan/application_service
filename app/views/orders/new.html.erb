@@ -1,3 +1,4 @@
+
 <% provide(:button_text, 'Place Order') %>
 <h1>Order A Gojek</h1>
 <p style="text-align: center
@@ -6,7 +7,7 @@
 
 <div class="row">
   <div class="col-sm-6 col-sm-offset-3">
-  <%= form_for(@order) do |f| %>
+  <%= form_for(@order, url:check_order_path) do |f| %>
     <%= render 'error_messages' %>
 
     <%= f.label :pickup %>
@@ -14,8 +15,6 @@
 
     <%= f.label :destination %>
     <%= f.text_field :destination, class: 'form-control' %>
-
-    <%= f.hidden_field :customer_id, value: session[:user_id] %>
 
     <%= f.label :payment %>
     <%= f.select :payment, Order.payments.keys, prompt:"Select a payment type" %>
