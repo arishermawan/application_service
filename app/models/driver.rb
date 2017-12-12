@@ -17,7 +17,7 @@ class Driver < ApplicationRecord
   validates :password, length: { minimum: 6 }, allow_blank:true
   validates :service, inclusion: services.keys
   validates :service, presence: true
-  # validates :location, presence: true, on: :update
+  validates :location, presence: true, on: :update, if: :location_updated?
 
   validates_with LocationValidator
 
@@ -43,5 +43,7 @@ class Driver < ApplicationRecord
     self.location = self.get_geocode if !location.nil?
   end
 
-
+  def location_updated?
+    changed.include?("location")
+  end
 end

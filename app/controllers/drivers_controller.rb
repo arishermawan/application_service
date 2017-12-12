@@ -77,6 +77,6 @@ class DriversController < ApplicationController
 
     def correct_driver
       @driver = Driver.find(params[:id])
-      redirect_to(root_url) unless @driver == current_driver
+      redirect_to(root_url) unless @driver == current_user
     end
 end

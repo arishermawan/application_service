@@ -13,19 +13,19 @@ RSpec.describe Order, type: :model do
   it "is invalid without a pickup" do
     order = build(:order, pickup: nil)
     order.valid?
-    expect(order.errors[:pickup).to include("can't be blank")
+    expect(order.errors[:pickup]).to include("can't be blank")
   end
 
   it "is invalid without a destination" do
     order = build(:order, destination: nil)
     order.valid?
-    expect(order.errors[:destination).to include("can't be blank")
+    expect(order.errors[:destination]).to include("can't be blank")
   end
 
   it "is invalid without a payment type" do
     order = build(:order, payment: nil)
     order.valid?
-    expect(order.errors[:payment).to include("can't be blank")
+    expect(order.errors[:payment]).to include("can't be blank")
   end
 
 

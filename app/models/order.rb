@@ -1,7 +1,6 @@
 class Order < ApplicationRecord
   belongs_to :customer
-  belongs_to :driver
-
+  belongs_to :driver, optional: true
 
   enum payment: {
     "cash" => 0,

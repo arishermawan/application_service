@@ -1,0 +1,26 @@
+<% provide(:button_text, 'Place Order') %>
+<h1>Order A Gojek</h1>
+<p style="text-align: center
+">Please input the details below..</p>
+
+
+<div class="row">
+  <div class="col-sm-6 col-sm-offset-3">
+  <%= form_for(@order) do |f| %>
+    <%= render 'error_messages' %>
+
+    <%= f.label :pickup %>
+    <%= f.text_field :pickup, class: 'form-control' %>
+
+    <%= f.label :destination %>
+    <%= f.text_field :destination, class: 'form-control' %>
+
+    <%= f.hidden_field :customer_id, value: session[:user_id] %>
+
+    <%= f.label :payment %>
+    <%= f.select :payment, Order.payments.keys, prompt:"Select a payment type" %>
+
+    <%= f.submit yield(:button_text), class: "btn btn-primary" %>
+  <% end %>
+  </div>
+</div>
