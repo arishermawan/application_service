@@ -43,10 +43,29 @@ class DriversController < ApplicationController
     end
   end
 
+  def set_location
+    @driver = Driver.find(params[:id])
+  end
+
+  def commit_location
+    @driver = Driver.find(params[:id])
+
+    if @driver.update_attributes(location_params)
+      flash[:success] = "Location Update"
+      redirect_to @driver
+    else
+      render 'set_location'
+    end
+  end
+
   private
 
     def driver_params
-      params.require(:driver).permit(:name, :email, :phone, :password, :password_confirmation)
+      params.require(:driver).permit(:name, :email, :phone, :service, :password, :password_confirmation)
+    end
+
+    def location_params
+      params.require(:driver).permit(:location)
     end
 
     def logged_in_driver

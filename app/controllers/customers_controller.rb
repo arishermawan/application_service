@@ -43,10 +43,33 @@ class CustomersController < ApplicationController
     end
   end
 
+  def topup
+    @customer = Customer.find(params[:id])
+  end
+
+  def commit_topup
+    @customer = Customer.find(params[:id])
+
+    if params[:customer][:gopay].to_i != 0 && !params[:customer][:gopay].match(/[^0-9]/)
+      params[:customer][:gopay] = params[:customer][:gopay].to_i + @customer.gopay
+    end
+
+    if @customer.update_attributes(gopay_params)
+      flash[:success] = "Topup Success"
+      redirect_to @customer
+    else
+      render 'topup'
+    end
+  end
+
   private
 
     def customer_params
       params.require(:customer).permit(:name, :email, :phone, :password, :password_confirmation)
+    end
+
+    def gopay_params
+      params.require(:customer).permit(:gopay)
     end
 
     def logged_in_customer

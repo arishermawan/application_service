@@ -11,5 +11,6 @@ class Customer < ApplicationRecord
 
   validates :password, presence: true, on: :create
   validates :password, length: { minimum: 6 }, allow_blank:true
-  
+  validates :gopay, presence: true, numericality: { greater_than_or_equal_to: 0.01 }
+
 end

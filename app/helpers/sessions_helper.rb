@@ -5,7 +5,7 @@ module SessionsHelper
   end
 
   def current_user
-    if !session[:user_id].nil?
+    if session[:user_id]
       @current_user ||= session[:user_type].constantize.find_by(id: session[:user_id])
     end
   end

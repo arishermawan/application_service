@@ -39,6 +39,7 @@ gem 'will_paginate',           '3.1.5'
 gem 'bootstrap-will_paginate', '1.0.0'
 gem 'racecar'
 gem 'phobos'
+gem 'google_maps_service'
 
 
 group :development, :test do

@@ -10,8 +10,8 @@
   <%= f.label :phone %>
   <%= f.text_field :phone, class: 'form-control' %>
 
-  <%= f.label :type %>
-  <%= f.select :type, Driver.services.keys, prompt:"Select a service type", "class"=>'form-control'%>
+  <%= f.label :service %>
+  <%= f.select :service, Driver.services.keys, prompt:"Select a service type", size:40 %>
 
   <%= f.label :password %>
   <%= f.password_field :password, class: 'form-control' %>

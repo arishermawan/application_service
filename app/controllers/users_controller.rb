@@ -43,10 +43,28 @@ class UsersController < ApplicationController
     end
   end
 
+  def topup
+    @user = User.find(params[:id])
+  end
+
+  def commit_topup
+    @user = User.find(params[:id])
+    if @user.update_attributes(gopay_params)
+      flash[:success] = "Topup Success"
+      redirect_to @user
+    else
+      render 'topup'
+    end
+  end
+
   private
 
     def user_params
       params.require(:user).permit(:name, :email, :phone, :password, :password_confirmation)
+    end
+
+    def gopay_params
+      params.require(:user).permit(:gopay)
     end
 
     def logged_in_user
