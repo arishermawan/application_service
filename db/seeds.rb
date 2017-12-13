@@ -7,17 +7,17 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 
-# Customer.create!(
-#   name: 'aris',
-#   email: 'aris@customer.com',
-#   phone: '082310232303',
-#   password: 'password',
-#   password_confirmation: 'password'
-# )
+Customer.create!(
+  name: 'aris',
+  email: 'aris@gmail.com',
+  phone: '082310232303',
+  password: 'password',
+  password_confirmation: 'password'
+)
 
 Driver.create!(
   name: 'aris',
-  email: 'aris@driver.com',
+  email: 'aris@gmail.com',
   phone: '082310232303',
   service: 1,
   password: 'password',

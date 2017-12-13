@@ -9,7 +9,7 @@ class CustomersController < ApplicationController
 
   def new
     if logged_in?
-      redirect_to current_customer
+      redirect_to current_user
     end
   @customer = Customer.new
   end
@@ -81,6 +81,6 @@ class CustomersController < ApplicationController
 
     def correct_customer
       @customer = Customer.find(params[:id])
-      redirect_to(root_url) unless @customer == current_user
+      redirect_to(root_url) unless @customer == @current_user
     end
 end

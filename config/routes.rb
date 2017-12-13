@@ -4,11 +4,6 @@ Rails.application.routes.draw do
   get 'sessions/new'
   post 'sessions/create'
 
-  resources :users
-  resources :customers
-  resources :drivers
-  resources :orders
-
   get  '/signup',  to: 'customers#new'
   get  '/customer/signup',  to: 'customers#new'
   post  '/customer/signup',  to: 'customers#create'
@@ -32,6 +27,12 @@ Rails.application.routes.draw do
   get 'orders/confirm'
   post 'orders/check', to: 'orders#check', as: 'check_order'
   post 'orders/create', to: 'orders#create', as: 'place_order'
+  get 'orders/create', to: 'customers#index'
+
+  resources :users
+  resources :customers
+  resources :drivers
+  resources :orders
 
   # get '/users/:id/topup', to: 'users#topup', as: 'user_topup'
 

@@ -18,19 +18,24 @@
 
     <table class="table">
       <tr>
-        <td>Payment Type</td>
-        <td><%= @order.payment %></td>
-      </tr>
-
-      <tr>
         <td>Distance</td>
-        <td><%= @order.distance.to_f / 1000 %> Km</td>
+        <td><%= @order.distance_matrix  %> Km</td>
       </tr>
 
       <tr>
         <td>Total Cost</td>
-        <td><%= @order.distance.to_f / 1000 * 1500 %></td>
+        <td><%= number_to_currency(@order.distance_matrix * @order.cost_per_km, unit: "Rp ", delimiter: ".", separator: ",") %></td>
       </tr>
+
+      <tr>
+        <td>Please Choose Your Payment</td>
+        <td>
+          <%= f.label :payment, "Cash" %>
+          <%= f.radio_button :payment, 'gopay' %>
+          <%= f.label :payment, "Go Pay" %>
+          <%= f.radio_button :payment, 'gopay', :checked => true %>
+        </td>
+      <tr>
 
     </table>
 

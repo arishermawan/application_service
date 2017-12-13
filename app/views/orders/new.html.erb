@@ -16,8 +16,7 @@
     <%= f.label :destination %>
     <%= f.text_field :destination, class: 'form-control' %>
 
-    <%= f.label :payment %>
-    <%= f.select :payment, Order.payments.keys, prompt:"Select a payment type" %>
+    <%= f.hidden_field :payment, value:'cash' %>
 
     <%= f.submit yield(:button_text), class: "btn btn-primary" %>
   <% end %>

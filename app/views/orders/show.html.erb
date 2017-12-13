@@ -1,0 +1,46 @@
+<p id="notice"><%= notice %></p>
+<div class="row">
+  <div class="col-sm-6 col-sm-offset-3">
+  <h2>Your Order is Succeed</h2>
+  <h3>Please wait, We're searching a driver for you</h3>
+
+
+  <table class="table">
+
+    <tr>
+      <td>Service</td>
+      <td></td>
+    </tr>
+
+    <tr>
+      <td>Pickup Location</td>
+      <td><%= @order.pickup %></td>
+    </tr>
+
+    <tr>
+      <td>Pickup Location</td>
+      <td><%= @order.destination %></td>
+    </tr>
+
+    <tr>
+      <td>Distance</td>
+      <td><%= @order.distance %></td>
+    </tr>
+
+    <tr>
+      <td>Payment Type</td>
+      <td><%= @order.payment %></td>
+    </tr>
+
+
+    <tr>
+      <td>Total Cost</td>
+      <td><%= number_to_currency(@order.total, unit: "Rp ", delimiter: ".", separator: ",")  %></td>
+    </tr>
+
+
+  </table>
+  
+
+
+<%= link_to 'Back', users_path(id: @order.customer_id) %>

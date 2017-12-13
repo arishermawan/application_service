@@ -64,9 +64,10 @@ class Order < ApplicationRecord
     if api_not_empty?
       if get_google_api[:rows][0][:elements][0][:status] == "OK"
         result = get_google_api[:rows][0][:elements][0][:distance][:value]
+        result = (result.to_f / 1000).round(2)
       end
     end
-    self.distance = result.round(2)
+    self.distance = result
   end
 
   def cost_per_km

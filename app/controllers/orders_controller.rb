@@ -1,4 +1,5 @@
 class OrdersController < ApplicationController
+  before_action :set_order, only: [:show]
 
   def index
     @orders = Order.all
@@ -33,8 +34,8 @@ class OrdersController < ApplicationController
 
     @order.customer_id = session[:user_id]
     respond_to do |format|
-      if @order.save?
-        format.html{render :show}
+      if @order.save
+        format.html{ redirect_to @order}
       else
         format.html{render :new}
       end
