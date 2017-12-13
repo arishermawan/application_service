@@ -1,0 +1,15 @@
+<%= form_for(@order, url:check_order_path) do |f| %>
+    <%= render 'error_messages' %>
+
+    <%= f.label :pickup %>
+    <%= f.text_field :pickup, class: 'form-control' %>
+
+    <%= f.label :destination %>
+    <%= f.text_field :destination, class: 'form-control' %>
+
+    <%= f.hidden_field :service, value:'goride' %>
+    <%= f.hidden_field :payment, value:'cash' %>
+
+
+    <%= f.submit yield(:button_text), class: "btn btn-primary" %>
+  <% end %>

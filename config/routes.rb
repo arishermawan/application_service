@@ -16,13 +16,6 @@ Rails.application.routes.draw do
   get    '/customer/login',   to: 'sessions#new'
   post   '/customer/login',   to: 'sessions#create'
 
-  get    '/orders/goride',   to: 'orders#new'
-  post    '/orders/goride',   to: 'orders#create'
-
-  get    '/orders/gocar',   to: 'orders#new'
-  post    '/orders/gocar',   to: 'orders#create'
-
-
   delete '/logout',  to: 'sessions#destroy'
 
   get '/customers/:id/topup',  to: 'customers#topup', as: 'topup'
@@ -32,6 +25,9 @@ Rails.application.routes.draw do
   patch '/drivers/:id/set_location',  to: 'drivers#commit_location', as: 'commit_location'
 
   get 'orders/confirm'
+
+  get    '/orders/goride',   to: 'orders#goride'
+  get    '/orders/gocar',   to: 'orders#gocar'
   post 'orders/check', to: 'orders#check', as: 'check_order'
   post 'orders/create', to: 'orders#create', as: 'place_order'
 

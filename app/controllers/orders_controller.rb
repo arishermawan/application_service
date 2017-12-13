@@ -12,15 +12,26 @@ class OrdersController < ApplicationController
     @order = Order.new
   end
 
+  def gocar
+    @order = Order.new
+  end
+
+  def goride
+    @order = Order.new
+  end
+
   def check
     @order = Order.new(order_params)
-
     @order.customer_id = session[:user_id]
     respond_to do |format|
       if @order.valid?
         format.html{render :confirm}
       else
-        format.html{render :new}
+        if @order.service == 'gocar'
+          format.html{render :gocar}
+        else
+          format.html{render :goride}
+        end
       end
     end
   end

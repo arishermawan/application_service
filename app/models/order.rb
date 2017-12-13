@@ -4,19 +4,20 @@ class Order < ApplicationRecord
 
   before_save :calculate_total, :distance_matrix
 
-  enum payment: {
-    "cash" => 0,
-    "gopay" => 1
-  }
-
   enum service: {
     "goride" => 0,
     "gocar" => 1
   }
 
+  enum payment: {
+    "cash" => 0,
+    "gopay" => 1
+  }
+
   validates_with OrderLocationValidator
   validates_with GopayValidator
   validates :payment, inclusion: payments.keys
+  validates :service, inclusion: services.keys
   validates :pickup, :destination, :payment, presence:true
 
   def api_key
@@ -26,18 +27,6 @@ class Order < ApplicationRecord
   def get_google_api
     matrix = []
     gmaps = GoogleMapsService::Client.new(key: api_key)
-    origins = pickup
-    destinations = destination
-    if !origins.empty? && !destinations.empty?
-      matrix = gmaps.distance_matrix(origins, destinations, mode: 'driving', language: 'en-AU', avoid: 'tolls')
-    end
-    matrix
-  end
-
-
-  def self.google_api(pickup, destination)
-    matrix = []
-    gmaps = GoogleMapsService::Client.new(key: 'AIzaSyAT3fcxh_TKujSW6d6fP9cUtrexk0eEvAE')
     origins = pickup
     destinations = destination
     if !origins.empty? && !destinations.empty?
