@@ -30,10 +30,36 @@
       <tr>
         <td>Please Choose Your Payment</td>
         <td>
-          <%= f.label :payment, "Cash" %>
-          <%= f.radio_button :payment, 'gopay' %>
-          <%= f.label :payment, "Go Pay" %>
-          <%= f.radio_button :payment, 'gopay', :checked => true %>
+          <% if @order.gopay_sufficient? %>
+            <div class="radio">
+              <label>
+                <%= f.radio_button :payment, 'cash'%>
+                CASH
+              </label>
+            </div>
+            <div class="radio">
+              <label>
+                <%= f.radio_button :payment, 'gopay', :checked => true %>
+                GOPAY
+              </label>
+            </div>
+            your gopay credit : <%= number_to_currency(@order.customer.gopay, unit: "Rp ", delimiter: ".", separator: ",")  %>
+          <% else %>
+            <div class="radio">
+              <label>
+                <%= f.radio_button :payment, 'cash', :checked => true%>
+                CASH
+              </label>
+            </div>
+            <div class="radio">
+              <label>
+                <%= f.radio_button :payment, 'gopay', disabled: true %>
+                GOPAY
+              </label>
+            </div>
+            your gopay credit is not sufficient: <%= number_to_currency(@order.customer.gopay, unit: "Rp ", delimiter: ".", separator: ",")  %>
+
+          <% end %>
         </td>
       <tr>
 

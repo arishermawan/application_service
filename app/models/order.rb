@@ -82,6 +82,14 @@ class Order < ApplicationRecord
     self.total = total
   end
 
+  def gopay_sufficient?
+    result = false
+    if api_not_empty?
+      result = true if customer.gopay >= calculate_total
+    end
+    result
+  end
+
   def api_not_empty?
     !get_google_api.empty?
   end
