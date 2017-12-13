@@ -7,6 +7,7 @@ FactoryGirl.define do
     payment 'cash'
     distance "9.99"
     total "9000"
+    service "goride"
 
     association :customer
     association :driver

@@ -9,6 +9,11 @@ class Order < ApplicationRecord
     "gopay" => 1
   }
 
+  enum service: {
+    "goride" => 0,
+    "gocar" => 1
+  }
+
   validates_with OrderLocationValidator
   validates_with GopayValidator
   validates :payment, inclusion: payments.keys
@@ -72,8 +77,7 @@ class Order < ApplicationRecord
   end
 
   def cost_per_km
-    1500
-    # service == 'gocar' ? 2500 : 1500
+    service == 'gocar' ? 2500 : 1500
   end
 
   def calculate_total

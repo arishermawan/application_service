@@ -60,7 +60,7 @@ RSpec.describe Order, type: :model do
       @get_api = @order.get_google_api
 
       @invalid_order = build(:order, pickup:'', destination:'')
-      @invalid_get_api = @order.get_google_api
+      @invalid_get_api = @invalid_order.get_google_api
     end
 
     describe "get_google_api" do
@@ -106,12 +106,12 @@ RSpec.describe Order, type: :model do
     describe "cost_per_km" do
       it "get Rp 1500 if service type goride" do
         order = build(:order, service:'goride')
-        expect(@order.cost_per_km).to eq (1500)
+        expect(order.cost_per_km).to eq (1500)
       end
 
       it "get Rp 2500 if service type gocar" do
         order = build(:order, service:'gocar')
-        expect(@order.cost_per_km).to eq (2500)
+        expect(order.cost_per_km).to eq (2500)
       end
     end
 
@@ -136,7 +136,7 @@ RSpec.describe Order, type: :model do
         expect(@order.gopay_sufficient?).to eq (true)
       end
 
-      it "return true if gopay balance is less than total cost" do
+      it "return false if gopay balance is less than total cost" do
         customer = create(:customer, gopay: 4000)
         order = build(:order, pickup: "kolla sabang", destination: "blok m", customer: customer)
         expect(order.gopay_sufficient?).to eq (false)
@@ -144,11 +144,11 @@ RSpec.describe Order, type: :model do
     end
 
     describe "api_not_empty?" do
-      it "return true if order attributes is valid" do
+      it "return true if google api is not empty" do
         expect(@order.api_not_empty?).to eq(true)
       end
 
-      it "return true if order attributes is invalid" do
+      it "return false if google_api is empty" do
         expect(@invalid_order.api_not_empty?).to eq(false)
       end
     end

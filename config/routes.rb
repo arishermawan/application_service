@@ -16,6 +16,13 @@ Rails.application.routes.draw do
   get    '/customer/login',   to: 'sessions#new'
   post   '/customer/login',   to: 'sessions#create'
 
+  get    '/orders/goride',   to: 'orders#new'
+  post    '/orders/goride',   to: 'orders#create'
+
+  get    '/orders/gocar',   to: 'orders#new'
+  post    '/orders/gocar',   to: 'orders#create'
+
+
   delete '/logout',  to: 'sessions#destroy'
 
   get '/customers/:id/topup',  to: 'customers#topup', as: 'topup'
@@ -27,7 +34,7 @@ Rails.application.routes.draw do
   get 'orders/confirm'
   post 'orders/check', to: 'orders#check', as: 'check_order'
   post 'orders/create', to: 'orders#create', as: 'place_order'
-  get 'orders/create', to: 'customers#index'
+
 
   resources :users
   resources :customers

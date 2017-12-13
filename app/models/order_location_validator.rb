@@ -12,5 +12,8 @@ class OrderLocationValidator < ActiveModel::Validator
       end
     end
 
+    if record.distance_matrix > 25.0
+      record.errors[:destination] << "distance is greater than 25 km, we only serve maximum 25 km"
+    end
   end
 end
