@@ -89,19 +89,23 @@ RSpec.describe Customer, type: :model do
   end
 
   it "is invalid without gopay" do
-    customer = build(:customer, gopay:nil)
-    customer.valid?
+    customer = create(:customer)
+    gopay = nil
+    customer.update(gopay: gopay)
     expect(customer.errors[:gopay]).to include("can't be blank")
   end
 
-  it "is invalid if gopay non mumeric" do
-    customer = build(:customer, gopay:'200 rupiah')
-    customer.valid?
+  it "is invalid if gopay non numeric" do
+    customer = create(:customer)
+    gopay = '200 rupiah'
+    customer.update(gopay: gopay)
     expect(customer.errors[:gopay]).to include('is not a number')
   end
 
   it "is invalid if gopay less than 0.01" do
-    customer = build(:customer)
+    customer = create(:customer)
+    gopay = 0
+    customer.update(gopay: gopay)
     expect(customer.errors[:gopay]).to include('must be greater than or equal to 0.01')
   end
 

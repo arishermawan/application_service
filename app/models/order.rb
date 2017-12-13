@@ -2,12 +2,15 @@ class Order < ApplicationRecord
   belongs_to :customer
   belongs_to :driver, optional: true
 
+  before_save :calculate_total, :distance_matrix
+
   enum payment: {
     "cash" => 0,
     "gopay" => 1
   }
 
   validates_with OrderLocationValidator
+  validates_with GopayValidator
   validates :payment, inclusion: payments.keys
   validates :pickup, :destination, :payment, presence:true
 
@@ -56,14 +59,26 @@ class Order < ApplicationRecord
     result
   end
 
-  def distance
+  def distance_matrix
     result = 0
     if api_not_empty?
       if get_google_api[:rows][0][:elements][0][:status] == "OK"
         result = get_google_api[:rows][0][:elements][0][:distance][:value]
       end
     end
-    result
+    self.distance = result.round(2)
+  end
+
+  def cost_per_km
+    1500
+  end
+
+  def calculate_total
+    total = 0
+    if api_not_empty?
+      total = distance_matrix * cost_per_km
+    end
+    self.total = total
   end
 
   def api_not_empty?

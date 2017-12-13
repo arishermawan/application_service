@@ -11,13 +11,13 @@ RSpec.describe Order, type: :model do
   end
 
   it "is invalid without a pickup" do
-    order = build(:order, pickup: nil)
+    order = build(:order, pickup: '')
     order.valid?
     expect(order.errors[:pickup]).to include("can't be blank")
   end
 
   it "is invalid without a destination" do
-    order = build(:order, destination: nil)
+    order = build(:order, destination: '')
     order.valid?
     expect(order.errors[:destination]).to include("can't be blank")
   end
@@ -41,8 +41,8 @@ RSpec.describe Order, type: :model do
   end
 
   it "is invalid with inssufficient gopay balance" do
-    customer = create(:customer)
-    order = build(:order, total: 10000)
+    customer = create(:customer, gopay: 5000)
+    order = build(:order, pickup: "kemayoran", destination: "kebayoran", payment:"gopay",customer: customer)
     order.valid?
     expect(order.errors[:payment]).to include("gopay credit isn't enough")
   end

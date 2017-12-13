@@ -4,7 +4,7 @@ FactoryGirl.define do
   factory :order do
     pickup "kolla sabang"
     destination "sarinah mall"
-    payment 'gopay'
+    payment 'cash'
     distance "9.99"
     total "9000"
 
