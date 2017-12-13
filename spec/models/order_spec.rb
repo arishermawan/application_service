@@ -40,12 +40,117 @@ RSpec.describe Order, type: :model do
     expect(order.errors[:destination]).to include("is not found")
   end
 
-  it "is invalid with inssufficient gopay balance" do
-    customer = create(:customer, gopay: 5000)
-    order = build(:order, pickup: "kemayoran", destination: "kebayoran", payment:"gopay",customer: customer)
+  it "is invalid with wrong destination address" do
+    order = build(:order, destination: "azsxdcfewasqfx")
     order.valid?
-    expect(order.errors[:payment]).to include("gopay credit isn't enough")
+    expect(order.errors[:destination]).to include("is not found")
   end
 
+  it "is invalid with distance more than 25 km" do
+    customer = create(:customer, gopay: 5000)
+    order = build(:order, pickup: "jakarta", destination: "bandung")
+    order.valid?
+    expect(order.errors[:destination]).to include("distance is greater than 25 km, we only serve maximum 25 km")
+  end
 
+  context "create method request to google api" do
+    before :each do
+      @customer = create(:customer, gopay: 5000)
+      @order = build(:order, pickup:'kolla sabang', destination:'sarinah mall', customer: @customer)
+      @get_api = @order.get_google_api
+
+      @invalid_order = build(:order, pickup:'', destination:'')
+      @invalid_get_api = @order.get_google_api
+    end
+
+    describe "get_google_api" do
+      context "with valid attributes" do
+        it "return array from request google api service" do
+          expect(@get_api.empty?).to eq(false)
+        end
+
+        it "return ok status" do
+          expect(@get_api[:status]).to eq('OK')
+        end
+      end
+
+      context "with invalid attributes" do
+        it "return an empty array" do
+          expect(@invalid_get_api.empty?).to eq(true)
+        end
+      end
+    end
+
+    describe "pickup_address" do
+      it "return address from pickup location" do
+        expect(@order.pickup_address.empty?).not_to eq (true)
+      end
+    end
+
+    describe "destination_address" do
+      it "return address from destination location" do
+        expect(@order.destination_address.empty?).not_to eq (true)
+      end
+    end
+
+    describe "distance_matrix" do
+      it "get distance from pickup & destination" do
+        expect(@order.distance_matrix).to eq (1.0)
+      end
+
+      it "it return 1 km if distance less than 1.0 km" do
+        expect(@order.distance_matrix).to eq (1.0)
+      end
+    end
+
+    describe "cost_per_km" do
+      it "get Rp 1500 if service type goride" do
+        order = build(:order, service:'goride')
+        expect(@order.cost_per_km).to eq (1500)
+      end
+
+      it "get Rp 2500 if service type gocar" do
+        order = build(:order, service:'gocar')
+        expect(@order.cost_per_km).to eq (2500)
+      end
+    end
+
+    describe "calculate_total" do
+      context "using goride service" do
+        it "calculate cost from distance and cost per km price" do
+          order = build(:order, pickup: "kolla sabang", destination: "sarinah", service:'goride')
+          expect(@order.calculate_total).to eq (1500.0)
+        end
+      end
+
+      context "using gocar service" do
+        it "calculate cost from distance and cost per km price" do
+          order = build(:order, pickup: "kolla sabang", destination: "sarinah", service:'gocar')
+          expect(order.calculate_total).to eq (2500.0)
+        end
+      end
+    end
+
+    describe "gopay_sufficient?" do
+      it "return true if gopay balance is greater than total cost" do
+        expect(@order.gopay_sufficient?).to eq (true)
+      end
+
+      it "return true if gopay balance is less than total cost" do
+        customer = create(:customer, gopay: 4000)
+        order = build(:order, pickup: "kolla sabang", destination: "blok m", customer: customer)
+        expect(order.gopay_sufficient?).to eq (false)
+      end
+    end
+
+    describe "api_not_empty?" do
+      it "return true if order attributes is valid" do
+        expect(@order.api_not_empty?).to eq(true)
+      end
+
+      it "return true if order attributes is invalid" do
+        expect(@invalid_order.api_not_empty?).to eq(false)
+      end
+    end
+  end
 end

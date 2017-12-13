@@ -65,6 +65,7 @@ class Order < ApplicationRecord
       if get_google_api[:rows][0][:elements][0][:status] == "OK"
         result = get_google_api[:rows][0][:elements][0][:distance][:value]
         result = (result.to_f / 1000).round(2)
+        result = 1.0 if result < 1.0
       end
     end
     self.distance = result
@@ -72,6 +73,7 @@ class Order < ApplicationRecord
 
   def cost_per_km
     1500
+    # service == 'gocar' ? 2500 : 1500
   end
 
   def calculate_total
