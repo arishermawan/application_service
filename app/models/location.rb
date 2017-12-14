@@ -4,71 +4,47 @@ class Location < ApplicationRecord
 
   def self.get_location(address)
     result = ''
-    gmaps = GoogleMapsService::Client.new(key: 'AIzaSyAT3fcxh_TKujSW6d6fP9cUtrexk0eEvAE')
-    if !address.empty?
+    api_key = 'AIzaSyAT3fcxh_TKujSW6d6fP9cUtrexk0eEvAE'
+    if !address.nil? && !address.empty?
+      gmaps = GoogleMapsService::Client.new(key: api_key)
+      address.downcase!
       result = gmaps.geocode(address)
       if !result.empty?
         area = result[0][:address_components]
-        city =''
-        area.each do |x|
-          if x[:types][0]=="administrative_area_level_2"
-            city = x[:short_name]
+
+        city = ''
+        area.each do |type|
+          if type[:types][0]=="administrative_area_level_2"
+            city = type[:short_name].downcase
           end
         end
+
+        check_area = save_area_not_exist(city)
 
         geo = result[0][:geometry][:location]
         coordinate = [geo[:lat], geo[:lng]]
 
-        pick_area = Area.find_by(name: city)
-
-        if pick_area == nil
-          pick_area = Area.create(name: city)
-        end
-
-        find_location = Location.find_by(address: address)
-
-        if find_location == nil
-          find_location = pick_area.location.create(address: address, coordinate: coordinate)
-        end
-
-        result = find_location
+        check_location = save_location_not_exist(check_area, address, coordinate)
+        result = check_location
       end
     end
     result
   end
 
-  def self.get_area(address)
-    result = ''
-    gmaps = GoogleMapsService::Client.new(key: 'AIzaSyAT3fcxh_TKujSW6d6fP9cUtrexk0eEvAE')
-    if !address.empty?
-      result = gmaps.geocode(address)
-      if !result.empty?
-        area = result[0][:address_components]
-        result = area
-      end
+  def self.save_area_not_exist(area)
+    check_area = Area.find_by(name: area)
+    if check_area == nil
+      check_area = Area.create(name: area)
     end
-    result
+    check_area
   end
 
-  def self.testod(address)
-    result=''
-    gmaps = GoogleMapsService::Client.new(key: 'AIzaSyAT3fcxh_TKujSW6d6fP9cUtrexk0eEvAE')
-    if !address.empty?
-      result = gmaps.geocode(address)
-      if !result.empty?
-        area = result[0][:address_components]
-        area.each do |x|
-          if x[:types][0]=="administrative_area_level_2"
-            result = x[:short_name]
-          end
-        end
-      end
+  def self.save_location_not_exist(area, address, coordinate)
+    check_location = Location.find_by(address: address)
+    if check_location == nil
+      check_location = area.location.create(address: address, coordinate: coordinate)
     end
-
-    result
+    check_location
   end
-
-
-
 
 end

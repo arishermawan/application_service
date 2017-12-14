@@ -1,6 +1,6 @@
 class Driver < ApplicationRecord
 
-  belongs_to :location
+  belongs_to :area, optional:true
 
   has_secure_password
   before_save { email.downcase! }
@@ -29,14 +29,32 @@ class Driver < ApplicationRecord
 
   def get_geocode
     result = ''
-    gmaps = GoogleMapsService::Client.new(key: api_key)
-    if !location.empty?
-      result = gmaps.geocode(location)
-      if !result.empty?
-        result = result[0][:geometry][:location]
-        result[:address] = location
-        result = result.to_json
-      end
+    local_location = Location.find_by(address: location)
+    location_hash = {}
+    if !local_location.nil?
+      @driver.update_attributes(area_id: local_location.area.id)
+      location_hash[:coordinate] = local_location.coordinate
+      location_hash[:address] = local_location.address
+      location_hash[:city] = local_location.area.name
+      result = location_hash.to_json
+    else
+      # gmaps = GoogleMapsService::Client.new(key: api_key)
+      # if !location.empty?
+      #   result = gmaps.geocode(location)
+      #   if !result.empty?
+      #     area = result[0][:address_components]
+      #     city =''
+      #     area.each do |x|
+      #       if x[:types][0]=="administrative_area_level_2"
+      #         city = x[:short_name]
+      #       end
+      #     end
+      #     result = result[0][:geometry][:location]
+      #     result[:address] = location
+      #     result[:area] =
+      #     result = result.to_json
+      #   end
+      # end
     end
     result
   end
