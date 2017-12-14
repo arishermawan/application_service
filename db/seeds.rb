@@ -39,3 +39,53 @@ require 'faker'
   )
 
 end
+
+
+require 'faker'
+20.times do |n|
+  name = Faker::Name.name
+  email = "driver#{n+1}@goscholar.id"
+  phone = "081898809#{n+10}"
+  password = "password"
+  service = 0
+  n.odd? ? service = 0 : service = 1
+  Driver.create!(
+    name: name,
+    email: email,
+    phone: phone,
+    service: service,
+    password: password,
+    password_confirmation: password
+  )
+
+end
+
+locations = [
+  'Kolla Sabang',
+  'Kolla Sabang',
+  'Sarinah',
+  'Glodok',
+  'Blok M',
+  'Kemang',
+  'Kebayoran',
+  'Kemayoran',
+  'Mangga Dua',
+  'Pondok Pinang',
+  'Pondok Indah',
+  'Dukuh Atas',
+  'Panglima Polim',
+  'Lebak Bulus',
+  'Bundaran Hotel Indonesia',
+  'Harmoni',
+  'Senayan',
+  'Ciledung Jakarta',
+  'Cipulir Jakarta',
+  'Bintaro',
+  'Kemang',
+  'Kemanggisan'
+]
+
+21.times do |n|
+  driver = Driver.find(n+1)
+  driver.update_attributes!(location: locations[n+1])
+end

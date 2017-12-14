@@ -18,7 +18,6 @@ class Driver < ApplicationRecord
   validates :service, inclusion: services.keys
   validates :service, presence: true
   validates :location, presence: true, on: :update, if: :location_updated?
-
   validates_with LocationValidator
 
 
@@ -33,10 +32,47 @@ class Driver < ApplicationRecord
       result = gmaps.geocode(location)
       if !result.empty?
         result = result[0][:geometry][:location]
-        result[:addres] = location
+        result[:address] = location
+        result = result.to_json
       end
     end
     result
+  end
+
+  def address
+    address = eval(location)
+    address[:address]
+  end
+
+  def longitude
+    address = eval(location)
+    address[:lng]
+  end
+
+  def latitude
+    address = eval(location)
+    address[:lat]
+  end
+
+  def coordinate
+    [latitude, longitude]
+  end
+
+  def self.distance(loc1, loc2)
+    rad_per_deg = Math::PI/180
+    rkm = 6371
+    rm = rkm * 1000
+
+    dlat_rad = (loc2[0]-loc1[0]) * rad_per_deg
+    dlon_rad = (loc2[1]-loc1[1]) * rad_per_deg
+
+    lat1_rad, lon1_rad = loc1.map {|i| i * rad_per_deg }
+    lat2_rad, lon2_rad = loc2.map {|i| i * rad_per_deg }
+
+    a = Math.sin(dlat_rad/2)**2 + Math.cos(lat1_rad) * Math.cos(lat2_rad) * Math.sin(dlon_rad/2)**2
+    c = 2 * Math::atan2(Math::sqrt(a), Math::sqrt(1-a))
+
+    rm * c
   end
 
   def assign_location

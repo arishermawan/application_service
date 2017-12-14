@@ -96,8 +96,9 @@ RSpec.describe Driver, type: :model do
   describe "get_geocode" do
     before :each do
       @driver = build(:driver, location: 'sarinah')
-      @invalid_driver = build(:driver, location: '')
-      @wrong_driver = build(:driver, location: 'xxxxxxxxxx')
+      @wrong_driver = create(:driver)
+      @wrong_driver.update_attributes(location: "dlfjasdlfj")
+
     end
     context "with valid attributes" do
       it "return coordinate of an address" do
@@ -107,22 +108,34 @@ RSpec.describe Driver, type: :model do
 
     context "with invalid attributes" do
       it "return empty string" do
-        expect(@driver.get_geocode.empty?).to eq(true)
+        expect(@wrong_driver.get_geocode.empty?).to eq(true)
       end
+    end
+  end
+
+  context "parsing saved driver address and coordinate" do
+    before :each do
+      @driver = create(:driver)
+      @driver.update_attributes(location: "Kolla Sabang")
     end
 
     describe "address" do
-      expect(@driver.address).to eq('Kolla Sabang')
+      it 'return current driver address' do
+        expect(@driver.address).to eq('Kolla Sabang')
+      end
     end
 
-    describe "get_longitude" do
-      expect(@driver.longitude).to eq(106.824948)
+    describe "longitude" do
+      it 'return current driver longitude' do
+        expect(@driver.longitude).to eq(106.824948)
+      end
     end
 
-    describe "get_latitude" do
-      expect(@driver.address).to eq('sarinah')
+    describe "latitude" do
+      it 'return current driver address' do
+        expect(@driver.latitude).to eq(-6.185512)
+      end
     end
-
   end
 
 
