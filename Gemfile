@@ -38,7 +38,6 @@ gem 'jquery-rails'
 gem 'will_paginate',           '3.1.5'
 gem 'bootstrap-will_paginate', '1.0.0'
 gem 'racecar'
-gem 'phobos'
 gem 'google_maps_service'
 
 
@@ -58,7 +57,7 @@ group :test do
   gem 'guard',                    '2.13.0'
   gem 'guard-minitest',           '2.4.4'
   gem 'shoulda-matchers', '~> 3.1'
-  gem 'faker', git: 'https://github.com/stympy/faker.git'
+  gem 'faker', :git => 'https://github.com/stympy/faker.git', :branch => 'master'
   gem 'database_cleaner',"~> 1.3.0"
   gem 'launchy',"~> 2.4.2"
   gem "rspec_junit_formatter"
