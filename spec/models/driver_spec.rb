@@ -87,10 +87,74 @@ RSpec.describe Driver, type: :model do
     expect(driver.errors['password']).to include('is too short (minimum is 6 characters)')
   end
 
-  it "is invalid without a type" do
+  it "is invalid without a service type" do
     driver = build(:driver, service: nil)
     driver.valid?
     expect(driver.errors[:service]).to include("is not included in the list")
   end
+
+  describe "get_geocode" do
+    before :each do
+      @driver = build(:driver, location: 'sarinah')
+      @invalid_driver = build(:driver, location: '')
+      @wrong_driver = build(:driver, location: 'xxxxxxxxxx')
+    end
+    context "with valid attributes" do
+      it "return coordinate of an address" do
+        expect(@driver.get_geocode.empty?).not_to eq(true)
+      end
+    end
+
+    context "with invalid attributes" do
+      it "return empty string" do
+        expect(@driver.get_geocode.empty?).to eq(true)
+      end
+    end
+
+    describe "address" do
+      expect(@driver.address).to eq('Kolla Sabang')
+    end
+
+    describe "get_longitude" do
+      expect(@driver.longitude).to eq(106.824948)
+    end
+
+    describe "get_latitude" do
+      expect(@driver.address).to eq('sarinah')
+    end
+
+  end
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 end
