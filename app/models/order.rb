@@ -107,15 +107,16 @@ class Order < ApplicationRecord
     rm * c
   end
 
-  def get_geocode(address)
+  def get_geocode
     result = ''
     gmaps = GoogleMapsService::Client.new(key: api_key)
-    if !address.empty?
-      result = gmaps.geocode(address)
+    if !pickup.empty?
+      result = gmaps.geocode(pickup)
       if !result.empty?
-        result = result[0][:geometry][:location]
-        result[:address] = location
-        result = result.to_json
+        area = result[0][:address_components][4][:short_name]
+        geo = result[0][:geometry][:location]
+        coordinate = [geo[:lat], geo[:lng]]
+        result = [coordinate, area]
       end
     end
     result

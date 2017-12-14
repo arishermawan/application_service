@@ -1,5 +1,7 @@
 class Driver < ApplicationRecord
 
+  belongs_to :location
+
   has_secure_password
   before_save { email.downcase! }
   before_update { self.assign_location }
