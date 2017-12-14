@@ -60,6 +60,6 @@ class OrdersController < ApplicationController
   end
 
   def order_params
-    params.require(:order).permit(:pickup, :destination, :payment, :distance, :total)
+    params.require(:order).permit(:pickup, :destination, :payment, :distance, :service, :total)
   end
 end

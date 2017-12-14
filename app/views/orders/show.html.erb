@@ -9,7 +9,7 @@
 
     <tr>
       <td>Service</td>
-      <td></td>
+      <td><%= @order.service.upcase %></td>
     </tr>
 
     <tr>
@@ -24,12 +24,12 @@
 
     <tr>
       <td>Distance</td>
-      <td><%= @order.distance %></td>
+      <td><%= @order.distance %> Km</td>
     </tr>
 
     <tr>
       <td>Payment Type</td>
-      <td><%= @order.payment %></td>
+      <td><%= @order.payment.upcase %></td>
     </tr>
 
 

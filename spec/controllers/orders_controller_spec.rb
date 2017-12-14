@@ -44,40 +44,67 @@ RSpec.describe OrdersController, type: :controller do
     end
   end
 
+  describe 'GET #goride' do
+    it "assigns a new order to @order" do
+      get :goride
+      expect(assigns(:order)).to be_a_new(Order)
+    end
+
+    it "renders the goride template" do
+      get :goride
+      expect(response).to render_template :goride
+    end
+  end
+
+  describe 'GET #gocar' do
+    it "assigns a new order to @order" do
+      get :gocar
+      expect(assigns(:order)).to be_a_new(Order)
+    end
+
+    it "renders the gocar template" do
+      get :gocar
+      expect(response).to render_template :gocar
+    end
+  end
+
   describe 'POST #check' do
     context "with valid attributes" do
       it "renders the :confirm template" do
-        post :create, params:{ order: attributes_for(:invalid_order) }
-        expect(response).to render_template :new
+        post :check, params:{ order: {pickup: "sarinah", destination: "kolla sabang", payment: "cash", service: "goride"} }
+        expect(response).to render_template :goride
       end
     end
 
     context "with invalid attributes" do
       it "does not save the new order in the database " do
         expect{
-          post :create, params:{ order: attributes_for(:invalid_order) }
+          post :check, params:{ order: attributes_for(:invalid_order) }
         }.not_to change(Order, :count)
       end
 
-      it "re-renders the :new template" do
-        post :create, params:{ order: attributes_for(:invalid_order) }
-        expect(response).to render_template :new
+      it "re-renders the :goride template if service is goride" do
+        post :check, params:{ order: {destination:'', pickup:'', service:'goride'} }
+        expect(response).to render_template :goride
+      end
+
+      it "re-renders the :gocar template if service is gocar" do
+        post :check, params:{ order: {destination:'', pickup:'', service:'gocar'} }
+        expect(response).to render_template :gocar
       end
     end
   end
 
   describe 'POST #create' do
-    context "with valid attributes" do
+    # context "with valid attributes" do
+    #   it "save the new order in the database" do
+    #     expect{
+    #     post :create, params:{ order: attributes_for(:order) }
+    #     }.to change(Order, :count).by(1)
+    #   end
 
-      it "save the new order in the database" do
-        expect{
-        post :create, params:{ order: attributes_for(:order) }
-        }.to change(Order, :count).by(1)
-      end
-
-      it "sends order confirmation with apache kafka"
-
-    end
+    #   it "sends order confirmation with apache kafka"
+    # end
 
     context "with invalid attributes" do
       it "does not save the new order in the database " do

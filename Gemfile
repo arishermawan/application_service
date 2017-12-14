@@ -61,6 +61,7 @@ group :test do
   gem 'faker', git: 'https://github.com/stympy/faker.git'
   gem 'database_cleaner',"~> 1.3.0"
   gem 'launchy',"~> 2.4.2"
+  gem "rspec_junit_formatter"
 end
 
 group :development do

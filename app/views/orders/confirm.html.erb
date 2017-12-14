@@ -16,6 +16,8 @@
     <%= f.label :destination %>
     <%= f.text_field :destination, readonly: true, class: 'form-control' %>
 
+    <%= f.hidden_field :service, value: @order.service %>
+
     <table class="table">
       <tr>
         <td>Service </td>

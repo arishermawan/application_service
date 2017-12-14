@@ -8,12 +8,12 @@ RSpec.describe DriversController, type: :controller do
   end
 
   describe 'GET #index' do
-    it 'populates an array of drivers' do
-      driver1 = create(:driver)
-      driver2 = create(:driver)
-      get :index
-      expect(assigns(:drivers)).to match_array([driver1, driver2])
-    end
+    # it 'populates an array of drivers' do
+    #   driver1 = create(:driver)
+    #   driver2 = create(:driver)
+    #   get :index
+    #   expect(assigns(:drivers)).to match_array([driver1, driver2])
+    # end
 
     it 'render the :index template' do
       get :index
@@ -189,21 +189,21 @@ RSpec.describe DriversController, type: :controller do
     end
   end
 
-  describe 'DELETE #destroy' do
-    before :each do
-      @driver = create(:driver)
-    end
+  # describe 'DELETE #destroy' do
+  #   before :each do
+  #     @driver = create(:driver)
+  #   end
 
-    it "delete the driver from the database" do
-      expect{
-        delete :destroy, params: { id: @driver }
-      }.to change(Driver, :count).by(-1)
+  #   it "delete the driver from the database" do
+  #     expect{
+  #       delete :destroy, params: { id: @driver }
+  #     }.to change(Driver, :count).by(-1)
 
-    end
+  #   end
 
-    it "redirects to the driver#index" do
-      delete :destroy, params: { id: @driver }
-      expect(response).to redirect_to drivers_url
-    end
-  end
+  #   it "redirects to the driver#index" do
+  #     delete :destroy, params: { id: @driver }
+  #     expect(response).to redirect_to drivers_url
+  #   end
+  # end
 end

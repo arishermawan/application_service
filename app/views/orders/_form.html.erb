@@ -7,7 +7,7 @@
     <%= f.label :destination %>
     <%= f.text_field :destination, class: 'form-control' %>
 
-    <%= f.hidden_field :service, value:'goride' %>
+    <%= f.hidden_field :service, value:yield(:service_type) %>
     <%= f.hidden_field :payment, value:'cash' %>
 
 

@@ -53,6 +53,12 @@ RSpec.describe Order, type: :model do
     expect(order.errors[:destination]).to include("distance is greater than 25 km, we only serve maximum 25 km")
   end
 
+  it "is invalid with wrong destination address" do
+    order = build(:order, service: nil)
+    order.valid?
+    expect(order.errors[:service]).to include("is not included in the list")
+  end
+
   context "create method request to google api" do
     before :each do
       @customer = create(:customer, gopay: 5000)
