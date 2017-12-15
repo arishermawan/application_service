@@ -26,6 +26,9 @@ Rails.application.routes.draw do
 
   get 'orders/confirm'
 
+  get 'customers/:id/orders', to: 'customers#orders'
+  get 'drivers/:id/orders', to: 'drivers#orders'
+
   get    '/orders/goride',   to: 'orders#goride'
   get    '/orders/gocar',   to: 'orders#gocar'
   post 'orders/check', to: 'orders#check', as: 'check_order'

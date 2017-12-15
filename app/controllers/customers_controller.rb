@@ -43,6 +43,11 @@ class CustomersController < ApplicationController
     end
   end
 
+  def orders
+    @customer = Customer.find(params[:id])
+    @orders = @customer.orders
+  end
+
   def topup
     @customer = Customer.find(params[:id])
   end

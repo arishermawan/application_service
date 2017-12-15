@@ -43,6 +43,11 @@ class DriversController < ApplicationController
     end
   end
 
+  def orders
+    @driver = Driver.find(params[:id])
+    @orders = @driver.orders
+  end
+
   def set_location
     @driver = Driver.find(params[:id])
   end

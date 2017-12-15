@@ -1,6 +1,7 @@
 class Driver < ApplicationRecord
 
   belongs_to :area, optional:true
+  has_many :orders
 
   has_secure_password
   before_save { email.downcase! }
