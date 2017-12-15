@@ -99,6 +99,23 @@ class Order < ApplicationRecord
       hash[driver.name] = Location.distance(origin_coordinate, driver.coordinate)
       hash
     end
+    drivers_dist.min_by { |driver, length| length }
+  end
+
+    def api_not_empty?
+    !get_google_api.empty?
+  end
+
+  def nearest_all_drivers
+    customer_origin = Location.get_location(pickup)
+    customer_destination = Location.get_location(destination)
+    drivers = Driver.all
+    origin_coordinate = eval(customer_origin.coordinate)
+
+    drivers_dist = drivers.reduce(Hash.new) do |hash, driver|
+      hash[driver.name] = Location.distance(origin_coordinate, driver.coordinate)
+      hash
+    end
 
     drivers_dist.min_by { |driver, length| length }
 

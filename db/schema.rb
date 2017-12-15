@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171214234842) do
+ActiveRecord::Schema.define(version: 20171215030413) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -29,6 +29,7 @@ ActiveRecord::Schema.define(version: 20171214234842) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "password_digest"
+    t.integer "gopay_credit_id"
   end
 
   create_table "drivers", force: :cascade do |t|
@@ -43,7 +44,16 @@ ActiveRecord::Schema.define(version: 20171214234842) do
     t.string "password_digest"
     t.bigint "area_id"
     t.integer "status"
+    t.integer "gopay_credit_id"
     t.index ["area_id"], name: "index_drivers_on_area_id"
+  end
+
+  create_table "gopay_credits", force: :cascade do |t|
+    t.decimal "credit", default: "0.0"
+    t.integer "user_id"
+    t.integer "user_type"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "locations", force: :cascade do |t|
