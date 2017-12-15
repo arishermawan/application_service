@@ -18,4 +18,8 @@ class Customer < ApplicationRecord
     changed.include?("gopay")
   end
 
+  def topup_gopay(amount)
+      gopay_balance = GopayCredit.add_credit(amount, id, self.class.to_s)
+  end
+
 end

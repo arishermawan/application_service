@@ -90,10 +90,10 @@ class Order < ApplicationRecord
   end
 
   def nearest_driver
-    customer_origin = Location.get_location(pickup)
+    pickup_location = Location.get_location(pickup)
     customer_destination = Location.get_location(destination)
-    drivers = Driver.where(area_id: customer_origin.area_id)
-    origin_coordinate = eval(customer_origin.coordinate)
+    drivers = Driver.where(area_id: pickup_location.area_id)
+    origin_coordinate = eval(pickup_location.coordinate)
 
     drivers_dist = drivers.reduce(Hash.new) do |hash, driver|
       hash[driver.name] = Location.distance(origin_coordinate, driver.coordinate)
@@ -107,10 +107,10 @@ class Order < ApplicationRecord
   end
 
   def nearest_all_drivers
-    customer_origin = Location.get_location(pickup)
+    pickup_location = Location.get_location(pickup)
     customer_destination = Location.get_location(destination)
     drivers = Driver.all
-    origin_coordinate = eval(customer_origin.coordinate)
+    origin_coordinate = eval(pickup_location.coordinate)
 
     drivers_dist = drivers.reduce(Hash.new) do |hash, driver|
       hash[driver.name] = Location.distance(origin_coordinate, driver.coordinate)

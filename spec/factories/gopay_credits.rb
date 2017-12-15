@@ -2,8 +2,8 @@
 
 FactoryGirl.define do
   factory :gopay_credit do
-    credit 50000.0
+    credit 0.0
     user_id 1
-    user_type 0
+    user_type 'Customer'
   end
 end

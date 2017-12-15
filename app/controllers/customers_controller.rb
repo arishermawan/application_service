@@ -50,11 +50,13 @@ class CustomersController < ApplicationController
   def commit_topup
     @customer = Customer.find(params[:id])
 
-    if params[:customer][:gopay].to_i != 0 && !params[:customer][:gopay].match(/[^0-9]/)
-      params[:customer][:gopay] = params[:customer][:gopay].to_i + @customer.gopay
+    credit = params[:customer][:gopay]
+    if credit.to_i != 0 && !credit.match(/[^0-9]/)
+      new_credit = @customer.topup_gopay(credit.to_i)
+      params[:customer][:gopay] = new_credit
     end
 
-    if @customer.update_attributes(gopay_params)
+    if @customer.update(gopay_params)
       flash[:success] = "Topup Success"
       redirect_to @customer
     else

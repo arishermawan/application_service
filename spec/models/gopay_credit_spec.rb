@@ -30,4 +30,50 @@ RSpec.describe GopayCredit, type: :model do
 
   it "is invalid with duplicate user_id & user_type" do
   end
+
+
+  describe "add_credit" do
+    it 'add amount of credit' do
+      user_type = 'Customer'
+      credit = create(:gopay_credit, user_id:1, user_type: user_type)
+      GopayCredit.add_credit(10000, 1, user_type)
+      gopay = GopayCredit.find_record(1,user_type)
+      expect(gopay.credit).to eq(10000.0)
+    end
+
+    it 'add record if not exist' do
+      user_type = 'Customer'
+      GopayCredit.add_credit(10000, 1, user_type)
+      gopay = GopayCredit.find_record(1,user_type)
+      expect(gopay.credit).to eq(10000.0)
+    end
+  end
+
+  describe "reduce_credit" do
+    it 'reduce amount of credit' do
+      user_type = 'Customer'
+      credit = create(:gopay_credit, id:1 ,credit:10000, user_id:1, user_type: user_type)
+      GopayCredit.reduce_credit(10000, 1, user_type)
+      gopay = GopayCredit.find_record(1, user_type)
+      expect(gopay.credit).to eq(0.0)
+    end
+  end
+
+  describe "find_record" do
+    it 'return gopay_credit object if found' do
+      user_type = 'Customer'
+      credit = create(:gopay_credit, id:1 ,credit:10000, user_id:1, user_type: user_type)
+      gopay = GopayCredit.find_record(1, user_type)
+      expect(gopay.credit).to eq(10000.0)
+    end
+  end
+
+  describe "add_record" do
+    it 'create new record of gopay_credit' do
+      user_type = 'Customer'
+      GopayCredit.add_record(10000, 1, 0)
+      gopay = GopayCredit.find_record(1, user_type)
+      expect(gopay.credit).to eq(10000.0)
+    end
+  end
 end

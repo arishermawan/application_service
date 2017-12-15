@@ -154,7 +154,8 @@ RSpec.describe CustomersController, type: :controller do
 
   describe 'PATCH #commit_topup' do
     before :each do
-      @customer = create(:customer, gopay: 50000)
+      @gopay = create(:gopay_credit, user_id:1, credit:50000)
+      @customer = create(:customer, id:1, gopay: 50000)
       session[:user_id] = @customer.id
       session[:user_type] = 'Customer'
     end
