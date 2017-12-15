@@ -29,32 +29,20 @@ class Driver < ApplicationRecord
 
   def get_geocode
     result = ''
-    local_location = Location.find_by(address: location)
-    location_hash = {}
-    if !local_location.nil?
-      @driver.update_attributes(area_id: local_location.area.id)
-      location_hash[:coordinate] = local_location.coordinate
-      location_hash[:address] = local_location.address
-      location_hash[:city] = local_location.area.name
-      result = location_hash.to_json
+    find_location = Location.find_by(address: location)
+    if !find_location.nil?
+      result = find_location
+      result = result.attributes
     else
-      # gmaps = GoogleMapsService::Client.new(key: api_key)
-      # if !location.empty?
-      #   result = gmaps.geocode(location)
-      #   if !result.empty?
-      #     area = result[0][:address_components]
-      #     city =''
-      #     area.each do |x|
-      #       if x[:types][0]=="administrative_area_level_2"
-      #         city = x[:short_name]
-      #       end
-      #     end
-      #     result = result[0][:geometry][:location]
-      #     result[:address] = location
-      #     result[:area] =
-      #     result = result.to_json
-      #   end
-      # end
+      result = Location.get_location(location)
+      result = result.attributes if !result.to_s.empty?
+    end
+    if !result.empty?
+      self.area_id = result['area_id']
+      hash = {}
+      hash[:coordinate] = result['coordinate']
+      hash[:address] = result['address']
+      result = hash
     end
     result
   end
@@ -64,39 +52,13 @@ class Driver < ApplicationRecord
     address[:address]
   end
 
-  def longitude
-    address = eval(location)
-    address[:lng]
-  end
-
-  def latitude
-    address = eval(location)
-    address[:lat]
-  end
-
   def coordinate
-    [latitude, longitude]
-  end
-
-  def self.distance(loc1, loc2)
-    rad_per_deg = Math::PI/180
-    rkm = 6371
-    rm = rkm * 1000
-
-    dlat_rad = (loc2[0]-loc1[0]) * rad_per_deg
-    dlon_rad = (loc2[1]-loc1[1]) * rad_per_deg
-
-    lat1_rad, lon1_rad = loc1.map {|i| i * rad_per_deg }
-    lat2_rad, lon2_rad = loc2.map {|i| i * rad_per_deg }
-
-    a = Math.sin(dlat_rad/2)**2 + Math.cos(lat1_rad) * Math.cos(lat2_rad) * Math.sin(dlon_rad/2)**2
-    c = 2 * Math::atan2(Math::sqrt(a), Math::sqrt(1-a))
-
-    rm * c
+    address = eval(location)
+    coord = eval(address[:coordinate])
   end
 
   def assign_location
-    self.location = self.get_geocode if !location.nil?
+    self.location = self.get_geocode.to_json if !location.nil?
   end
 
   def location_updated?

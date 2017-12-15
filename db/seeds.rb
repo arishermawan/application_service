@@ -7,58 +7,58 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 
-Customer.create!(
-  name: 'aris',
-  email: 'aris@gmail.com',
-  phone: '082310232303',
-  password: 'password',
-  password_confirmation: 'password'
-)
+# Customer.create!(
+#   name: 'aris',
+#   email: 'aris@gmail.com',
+#   phone: '082310232303',
+#   password: 'password',
+#   password_confirmation: 'password'
+# )
 
-Driver.create!(
-  name: 'aris',
-  email: 'aris@gmail.com',
-  phone: '082310232303',
-  service: 1,
-  password: 'password',
-  password_confirmation: 'password'
-)
+# Driver.create!(
+#   name: 'aris',
+#   email: 'aris@gmail.com',
+#   phone: '082310232303',
+#   service: 1,
+#   password: 'password',
+#   password_confirmation: 'password'
+# )
 
-require 'faker'
-25.times do |n|
-  name = Faker::Name.name
-  email = "user#{n+1}@goscholar.id"
-  phone = "081298776#{n+10}"
-  password = "password"
-  Customer.create!(
-    name: name,
-    email: email,
-    phone: phone,
-    password: password,
-    password_confirmation: password
-  )
+# require 'faker'
+# 25.times do |n|
+#   name = Faker::Name.name
+#   email = "user#{n+1}@goscholar.id"
+#   phone = "081298776#{n+10}"
+#   password = "password"
+#   Customer.create!(
+#     name: name,
+#     email: email,
+#     phone: phone,
+#     password: password,
+#     password_confirmation: password
+#   )
 
-end
+# end
 
 
-require 'faker'
-20.times do |n|
-  name = Faker::Name.name
-  email = "driver#{n+1}@goscholar.id"
-  phone = "081898809#{n+10}"
-  password = "password"
-  service = 0
-  n.odd? ? service = 0 : service = 1
-  Driver.create!(
-    name: name,
-    email: email,
-    phone: phone,
-    service: service,
-    password: password,
-    password_confirmation: password
-  )
+# require 'faker'
+# 20.times do |n|
+#   name = Faker::Name.name
+#   email = "driver#{n+1}@goscholar.id"
+#   phone = "081898809#{n+10}"
+#   password = "password"
+#   service = 0
+#   n.odd? ? service = 0 : service = 1
+#   Driver.create!(
+#     name: name,
+#     email: email,
+#     phone: phone,
+#     service: service,
+#     password: password,
+#     password_confirmation: password
+#   )
 
-end
+# end
 
 locations = [
   'Kolla Sabang',

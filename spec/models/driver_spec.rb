@@ -121,53 +121,15 @@ RSpec.describe Driver, type: :model do
 
     describe "address" do
       it 'return current driver address' do
-        expect(@driver.address).to eq('Kolla Sabang')
+        expect(@driver.address).to eq('kolla sabang')
       end
     end
 
-    describe "longitude" do
+    describe "coordinate" do
       it 'return current driver longitude' do
-        expect(@driver.longitude).to eq(106.824948)
-      end
-    end
-
-    describe "latitude" do
-      it 'return current driver address' do
-        expect(@driver.latitude).to eq(-6.185512)
+        expect(@driver.coordinate).to eq([-6.185512, 106.824948])
       end
     end
   end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 end

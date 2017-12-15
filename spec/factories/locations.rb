@@ -2,7 +2,9 @@
 
 FactoryGirl.define do
   factory :location do
-    address "MyString"
-    coordinate "MyString"
+    address "kolla sabang"
+    coordinate "[-6.185512, 106.824948]"
+
+    association :area
   end
 end
