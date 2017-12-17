@@ -24,13 +24,23 @@ class Order < ApplicationRecord
     api = 'AIzaSyAT3fcxh_TKujSW6d6fP9cUtrexk0eEvAE'
   end
 
+  def get_location(origin, destination)
+    uri = URI('http://localhost:3001/locations/distance')
+    req = Net::HTTP::Post.new(uri)
+    req.set_form_data('origin' => origin, 'destination' => destination )
+
+    res = Net::HTTP.start(uri.hostname, uri.port) do |http|
+      http.request(req)
+    end
+    res.body = eval(res.body)
+  end
+
   def get_google_api
     matrix = []
-    gmaps = GoogleMapsService::Client.new(key: api_key)
     origins = pickup
     destinations = destination
     if !origins.empty? && !destinations.empty?
-      matrix = gmaps.distance_matrix(origins, destinations, mode: 'driving', language: 'en-AU', avoid: 'tolls')
+      matrix = get_location(origins, destinations)
     end
     matrix
   end
@@ -38,7 +48,7 @@ class Order < ApplicationRecord
   def pickup_address
     result = []
     if api_not_empty?
-      result = get_google_api[:origin_addresses]
+      result = get_google_api[:origin]
       result.reject! { |address| address.empty? }
     end
     result
@@ -47,7 +57,7 @@ class Order < ApplicationRecord
   def destination_address
     result = []
     if api_not_empty?
-      result = get_google_api[:destination_addresses]
+      result = get_google_api[:destination]
       result.reject! { |address| address.empty? }
     end
     result
@@ -56,11 +66,8 @@ class Order < ApplicationRecord
   def distance_matrix
     result = 0
     if api_not_empty?
-      if get_google_api[:rows][0][:elements][0][:status] == "OK"
-        result = get_google_api[:rows][0][:elements][0][:distance][:value]
-        result = (result.to_f / 1000).round(2)
-        result = 1.0 if result < 1.0
-      end
+      result = get_google_api[:distance]
+      result = 1.0 if result < 1.0
     end
     self.distance = result
   end
@@ -112,9 +119,7 @@ class Order < ApplicationRecord
       hash[driver.name] = Location.distance(origin_coordinate, driver.coordinate)
       hash
     end
-
     drivers_dist.min_by { |driver, length| length }
-
   end
 
 end

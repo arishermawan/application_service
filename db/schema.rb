@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171215030413) do
+ActiveRecord::Schema.define(version: 20171217072600) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -42,10 +42,9 @@ ActiveRecord::Schema.define(version: 20171215030413) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "password_digest"
-    t.bigint "area_id"
     t.integer "status"
     t.integer "gopay_credit_id"
-    t.index ["area_id"], name: "index_drivers_on_area_id"
+    t.integer "location_id"
   end
 
   create_table "gopay_credits", force: :cascade do |t|
@@ -93,7 +92,6 @@ ActiveRecord::Schema.define(version: 20171215030413) do
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 
-  add_foreign_key "drivers", "areas"
   add_foreign_key "locations", "areas"
   add_foreign_key "orders", "customers"
   add_foreign_key "orders", "drivers"

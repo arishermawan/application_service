@@ -23,29 +23,32 @@ class Driver < ApplicationRecord
   validates :location, presence: true, on: :update, if: :location_updated?
   validates_with LocationValidator
 
-
-  def api_key
-    api = 'AIzaSyAT3fcxh_TKujSW6d6fP9cUtrexk0eEvAE'
-  end
-
   def get_geocode
     result = ''
-    find_location = Location.find_by(address: location)
+    find_location = set_location(location, id, location_id)
     if !find_location.nil?
       result = find_location
-      result = result.attributes
-    else
-      result = Location.get_location(location)
-      result = result.attributes if !result.to_s.empty?
+      puts "---------------------------------------------#{result}"
     end
     if !result.empty?
-      self.area_id = result['area_id']
+      self.location_id = result[:id]
       hash = {}
-      hash[:coordinate] = result['coordinate']
-      hash[:address] = result['address']
+      hash[:coordinate] = result[:coordinate]
+      hash[:address] = result[:address]
       result = hash
     end
     result
+  end
+
+  def set_location(address, driver, location_id)
+    uri = URI('http://localhost:3001/locations/driver')
+    req = Net::HTTP::Post.new(uri)
+    req.set_form_data('address' => address, 'driver_id' => id, 'location_id' => location_id )
+
+    res = Net::HTTP.start(uri.hostname, uri.port) do |http|
+      http.request(req)
+    end
+    res.body = eval(res.body)
   end
 
   def address
