@@ -102,10 +102,6 @@ class Order < ApplicationRecord
     drivers_dist.min_by { |driver, length| length }
   end
 
-    def api_not_empty?
-    !get_google_api.empty?
-  end
-
   def nearest_all_drivers
     pickup_location = Location.get_location(pickup)
     customer_destination = Location.get_location(destination)

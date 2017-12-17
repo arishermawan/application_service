@@ -19,7 +19,7 @@ class Customer < ApplicationRecord
   end
 
   def topup_gopay(amount)
-      gopay_balance = GopayCredit.add_credit(amount, id, self.class.to_s)
+    gopay_balance = GopayCredit.add_credit(amount, id, self.class.to_s)
   end
 
 end
