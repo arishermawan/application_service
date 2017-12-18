@@ -3,6 +3,7 @@ class Order < ApplicationRecord
   belongs_to :driver, optional: true
 
   before_save :calculate_total, :distance_matrix
+  after_save :send_to_transaction_services
 
   enum service: {
     "goride" => 0,
@@ -19,10 +20,6 @@ class Order < ApplicationRecord
   validates :payment, inclusion: payments.keys
   validates :service, inclusion: services.keys
   validates :pickup, :destination, :payment, presence:true
-
-  def api_key
-    api = 'AIzaSyAT3fcxh_TKujSW6d6fP9cUtrexk0eEvAE'
-  end
 
   def get_location(origin, destination)
     uri = URI('http://localhost:3001/locations/distance')
@@ -95,6 +92,20 @@ class Order < ApplicationRecord
 
   def api_not_empty?
     !get_google_api.empty?
+  end
+
+  def send_to_transaction_services
+    require 'kafka'
+    kafka = Kafka.new( seed_brokers: ['localhost:9092'], client_id: 'transaction-service')
+
+    order = self.attributes
+    order.reject! { |key, value| value.nil? }
+    order['user_order'] = id
+    order.delete('id')
+    order.delete('created_at')
+    order.delete('updated_at')
+
+    kafka.deliver_message("POST-->#{order.to_json}", topic: 'orderServices')
   end
 
   # def nearest_driver
