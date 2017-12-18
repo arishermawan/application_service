@@ -19,7 +19,44 @@ class Customer < ApplicationRecord
   end
 
   def topup_gopay(amount)
-    gopay_balance = GopayCredit.add_credit(amount, id, self.class.to_s)
+    result = ""
+    if gopay_id.nil?
+      result = create_gopay_service(amount)
+    else
+      result = add_gopay_service(amount)
+    end
+    result
   end
 
+  def create_gopay_service(credit)
+    uri = URI('http://localhost:3001/gopays')
+    req = Net::HTTP::Post.new(uri)
+    req.set_form_data('credit' => credit, 'user_id' => id, 'user_type' => self.class.to_s )
+    res = Net::HTTP.start(uri.hostname, uri.port) do |http|
+      http.request(req)
+    end
+    res.body = eval(res.body)
+  end
+
+  def add_gopay_service(credit)
+    uri = URI("http://localhost:3001/gopays/#{gopay_id}/add")
+    req = Net::HTTP::Patch.new(uri)
+    req.set_form_data('credit' => credit )
+    res = Net::HTTP.start(uri.hostname, uri.port) do |http|
+      http.request(req)
+    end
+    res.body = eval(res.body)
+  end
+
+  def update_gopay_service
+    uri = URI("http://localhost:3001/gopays/#{gopay_id}")
+    req = Net::HTTP::Get.new(uri)
+    res = Net::HTTP.start(uri.hostname, uri.port) do |http|
+      http.request(req)
+    end
+    result = eval(res.body)
+    gopay_update = result[:credit].to_f
+
+    self.update(gopay: gopay_update) if gopay != gopay_update
+  end
 end

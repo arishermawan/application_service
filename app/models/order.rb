@@ -87,6 +87,7 @@ class Order < ApplicationRecord
   def gopay_sufficient?
     result = false
     if api_not_empty?
+      customer.update_gopay_service
       result = true if customer.gopay >= calculate_total
     end
     result
@@ -96,30 +97,30 @@ class Order < ApplicationRecord
     !get_google_api.empty?
   end
 
-  def nearest_driver
-    pickup_location = Location.get_location(pickup)
-    customer_destination = Location.get_location(destination)
-    drivers = Driver.where(area_id: pickup_location.area_id)
-    origin_coordinate = eval(pickup_location.coordinate)
+  # def nearest_driver
+  #   pickup_location = Location.get_location(pickup)
+  #   customer_destination = Location.get_location(destination)
+  #   drivers = Driver.where(area_id: pickup_location.area_id)
+  #   origin_coordinate = eval(pickup_location.coordinate)
 
-    drivers_dist = drivers.reduce(Hash.new) do |hash, driver|
-      hash[driver.name] = Location.distance(origin_coordinate, driver.coordinate)
-      hash
-    end
-    drivers_dist.min_by { |driver, length| length }
-  end
+  #   drivers_dist = drivers.reduce(Hash.new) do |hash, driver|
+  #     hash[driver.name] = Location.distance(origin_coordinate, driver.coordinate)
+  #     hash
+  #   end
+  #   drivers_dist.min_by { |driver, length| length }
+  # end
 
-  def nearest_all_drivers
-    pickup_location = Location.get_location(pickup)
-    customer_destination = Location.get_location(destination)
-    drivers = Driver.all
-    origin_coordinate = eval(pickup_location.coordinate)
+  # def nearest_all_drivers
+  #   pickup_location = Location.get_location(pickup)
+  #   customer_destination = Location.get_location(destination)
+  #   drivers = Driver.all
+  #   origin_coordinate = eval(pickup_location.coordinate)
 
-    drivers_dist = drivers.reduce(Hash.new) do |hash, driver|
-      hash[driver.name] = Location.distance(origin_coordinate, driver.coordinate)
-      hash
-    end
-    drivers_dist.min_by { |driver, length| length }
-  end
+  #   drivers_dist = drivers.reduce(Hash.new) do |hash, driver|
+  #     hash[driver.name] = Location.distance(origin_coordinate, driver.coordinate)
+  #     hash
+  #   end
+  #   drivers_dist.min_by { |driver, length| length }
+  # end
 
 end

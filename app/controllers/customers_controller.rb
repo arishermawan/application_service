@@ -57,8 +57,13 @@ class CustomersController < ApplicationController
 
     credit = params[:customer][:gopay]
     if credit.to_i != 0 && !credit.match(/[^0-9]/)
-      new_credit = @customer.topup_gopay(credit.to_i)
-      params[:customer][:gopay] = new_credit
+      if @customer.gopay_id.nil?
+        new_credit = @customer.create_gopay_service(credit.to_f)
+        params[:customer][:gopay_id] = new_credit[:id]
+      else
+        new_credit = @customer.add_gopay_service(credit.to_f)
+      end
+      params[:customer][:gopay] = new_credit[:credit]
     end
 
     if @customer.update(gopay_params)
@@ -76,7 +81,7 @@ class CustomersController < ApplicationController
     end
 
     def gopay_params
-      params.require(:customer).permit(:gopay)
+      params.require(:customer).permit(:gopay, :gopay_id)
     end
 
     def logged_in_customer
