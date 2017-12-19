@@ -3,7 +3,15 @@ class Order < ApplicationRecord
   belongs_to :driver, optional: true
 
   before_save :calculate_total, :distance_matrix
+  before_update :set_order_status
   after_save :send_to_transaction_services
+
+  enum status: {
+    "searching driver" => 0,
+    "driver found" => 1,
+    "complete" => 2,
+    "cancel" => 3
+  }
 
   enum service: {
     "goride" => 0,
@@ -22,7 +30,7 @@ class Order < ApplicationRecord
   validates :pickup, :destination, :payment, presence:true
 
   def get_location(origin, destination)
-    uri = URI('http://localhost:3001/locations/distance')
+    uri = URI('http://localhost:3002/locations/distance')
     req = Net::HTTP::Post.new(uri)
     req.set_form_data('origin' => origin, 'destination' => destination )
 
@@ -94,6 +102,14 @@ class Order < ApplicationRecord
     !get_google_api.empty?
   end
 
+  def set_order_status
+    if self.driver_id.to_s.empty?
+      self.status = 3
+    else
+      self.status = 1
+    end
+  end
+
   def send_to_transaction_services
     require 'kafka'
     kafka = Kafka.new( seed_brokers: ['localhost:9092'], client_id: 'transaction-service')
@@ -107,31 +123,4 @@ class Order < ApplicationRecord
 
     kafka.deliver_message("POST-->#{order.to_json}", topic: 'orderServices')
   end
-
-  # def nearest_driver
-  #   pickup_location = Location.get_location(pickup)
-  #   customer_destination = Location.get_location(destination)
-  #   drivers = Driver.where(area_id: pickup_location.area_id)
-  #   origin_coordinate = eval(pickup_location.coordinate)
-
-  #   drivers_dist = drivers.reduce(Hash.new) do |hash, driver|
-  #     hash[driver.name] = Location.distance(origin_coordinate, driver.coordinate)
-  #     hash
-  #   end
-  #   drivers_dist.min_by { |driver, length| length }
-  # end
-
-  # def nearest_all_drivers
-  #   pickup_location = Location.get_location(pickup)
-  #   customer_destination = Location.get_location(destination)
-  #   drivers = Driver.all
-  #   origin_coordinate = eval(pickup_location.coordinate)
-
-  #   drivers_dist = drivers.reduce(Hash.new) do |hash, driver|
-  #     hash[driver.name] = Location.distance(origin_coordinate, driver.coordinate)
-  #     hash
-  #   end
-  #   drivers_dist.min_by { |driver, length| length }
-  # end
-
 end

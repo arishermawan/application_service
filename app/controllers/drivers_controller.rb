@@ -11,7 +11,7 @@ class DriversController < ApplicationController
     if logged_in?
       redirect_to current_driver
     end
-  @driver = Driver.new
+    @driver = Driver.new
   end
 
   def show
@@ -55,7 +55,7 @@ class DriversController < ApplicationController
   def commit_location
     @driver = Driver.find(params[:id])
 
-    if @driver.update_attributes(location_params)
+    if @driver.update(location_params)
       flash[:success] = "Location Update"
       redirect_to @driver
     else
@@ -84,4 +84,5 @@ class DriversController < ApplicationController
       @driver = Driver.find(params[:id])
       redirect_to(root_url) unless @driver == current_user
     end
+
 end

@@ -21,14 +21,14 @@ class Driver < ApplicationRecord
   validates :service, inclusion: services.keys
   validates :service, presence: true
   validates :location, presence: true, on: :update, if: :location_updated?
+
   validates_with LocationValidator
 
   def get_geocode
     result = ''
-    find_location = set_location(location, id, location_id)
+    find_location = set_location(location, id, location_id, service)
     if !find_location.nil?
       result = find_location
-      puts "---------------------------------------------#{result}"
     end
     if !result.empty?
       self.location_id = result[:id]
@@ -40,10 +40,32 @@ class Driver < ApplicationRecord
     result
   end
 
-  def set_location(address, driver, location_id)
-    uri = URI('http://localhost:3001/locations/driver')
+  def check_geocode
+    result = ''
+    uri = URI('http://localhost:3002/locations/address')
     req = Net::HTTP::Post.new(uri)
-    req.set_form_data('address' => address, 'driver_id' => id, 'location_id' => location_id )
+    req.set_form_data('location' => location )
+
+    res = Net::HTTP.start(uri.hostname, uri.port) do |http|
+      http.request(req)
+    end
+    find_location = eval(res.body)
+    if !find_location.nil?
+      result = find_location
+    end
+    if !result.empty?
+      hash = {}
+      hash[:coordinate] = result[:coordinate]
+      hash[:address] = result[:address]
+      result = hash
+    end
+    result
+  end
+
+  def set_location(address, driver, location_id, service)
+    uri = URI('http://localhost:3002/locations/driver')
+    req = Net::HTTP::Post.new(uri)
+    req.set_form_data('address' => address, 'driver_id' => id, 'location_id' => location_id, 'service'=>service )
 
     res = Net::HTTP.start(uri.hostname, uri.port) do |http|
       http.request(req)
@@ -52,13 +74,17 @@ class Driver < ApplicationRecord
   end
 
   def address
-    address = eval(location)
-    address[:address]
+    if !location.nil?
+      address = eval(location)
+      address[:address]
+    end
   end
 
   def coordinate
-    address = eval(location)
-    coord = eval(address[:coordinate])
+    if !location.nil?
+      address = eval(location)
+      coord = eval(address[:coordinate])
+    end
   end
 
   def assign_location
@@ -68,4 +94,5 @@ class Driver < ApplicationRecord
   def location_updated?
     changed.include?("location")
   end
+
 end

@@ -10,7 +10,7 @@ FactoryGirl.define do
     password_confirmation "abc123"
   end
 
-  factory :invalid_driver, parent: :user do
+  factory :invalid_driver, parent: :customer do
     name nil
     email nil
     gopay nil

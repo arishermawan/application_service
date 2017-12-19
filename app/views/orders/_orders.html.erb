@@ -8,6 +8,7 @@
     <td>Total</td>
     <td>Customer</td>
     <td>Driver</td>
+    <td>Status</td>
     <td>Action</td>
   </tr>
 
@@ -20,7 +21,8 @@
     <td><%= o.distance %></td>
     <td><%= number_to_currency(o.total, unit: "Rp ", delimiter: ".", separator: ",")  %></td>
     <td><%= o.customer.name %></td>
-    <td></td>
+    <td><%= o.driver_id if !o.driver_id.nil?  %></td>
+    <td><%= o.status %></td>
     <td>  <%= link_to 'Show', o %>
           <%= link_to 'Edit', edit_order_path(o) %>
           <%= link_to 'Destroy', o, method: :delete, data: { confirm: 'Are you sure?' } %>
