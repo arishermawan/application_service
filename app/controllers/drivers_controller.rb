@@ -1,6 +1,6 @@
 class DriversController < ApplicationController
-  before_action :logged_in_driver, only: [:edit, :update]
-  before_action :correct_driver,   only: [:edit, :update]
+  before_action :logged_in_driver, only: [:set_location, :show, :edit, :update]
+  before_action :correct_driver,   only: [:set_location, :show, :edit, :update]
 
   def index
     @drivers = Driver.paginate(page:params[:page])

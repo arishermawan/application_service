@@ -1,6 +1,6 @@
 class CustomersController < ApplicationController
-  before_action :logged_in_customer, only: [:edit, :update]
-  before_action :correct_customer,   only: [:edit, :update]
+  before_action :logged_in_customer, only: [:topup, :show, :edit, :update]
+  before_action :correct_customer,   only: [:topup, :show, :edit, :update]
 
   def index
     @customers = Customer.paginate(page:params[:page])
@@ -62,8 +62,8 @@ class CustomersController < ApplicationController
         params[:customer][:gopay_id] = new_credit[:id]
       else
         new_credit = @customer.add_gopay_service(credit.to_f)
+        params[:customer][:gopay] = new_credit[:credit]
       end
-      params[:customer][:gopay] = new_credit[:credit]
     end
 
     if @customer.update(gopay_params)

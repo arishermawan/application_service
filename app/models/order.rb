@@ -3,8 +3,8 @@ class Order < ApplicationRecord
   belongs_to :driver, optional: true
 
   before_save :calculate_total, :distance_matrix
-  before_update :set_order_status
-  after_save :send_to_transaction_services
+  # before_update :set_order_status
+  # after_save :send_to_transaction_services
 
   enum status: {
     "searching driver" => 0,
@@ -102,14 +102,6 @@ class Order < ApplicationRecord
     !get_google_api.empty?
   end
 
-  def set_order_status
-    if self.driver_id.to_s.empty?
-      self.status = 3
-    else
-      self.status = 1
-    end
-  end
-
   def send_to_transaction_services
     require 'kafka'
     kafka = Kafka.new( seed_brokers: ['localhost:9092'], client_id: 'transaction-service')
@@ -122,5 +114,19 @@ class Order < ApplicationRecord
     order.delete('updated_at')
 
     kafka.deliver_message("POST-->#{order.to_json}", topic: 'orderServices')
+  end
+
+  def update_to_transaction_services
+    require 'kafka'
+    kafka = Kafka.new( seed_brokers: ['localhost:9092'], client_id: 'transaction-service')
+
+    order = Hash.new
+    order[:user_order] = id
+    order[:status] = status
+    kafka.deliver_message("UPDATE-->#{order.to_json}", topic: 'orderServices')
+  end
+
+  def status_changed?
+    changed.include?("status")
   end
 end

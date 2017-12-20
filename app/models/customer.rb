@@ -3,7 +3,7 @@ class Customer < ApplicationRecord
   has_secure_password
   has_many :orders
 
-  before_save { email.downcase! }
+  before_save { email.downcase! if email_changed? }
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :name, presence: true, length: { maximum: 50 }
@@ -58,5 +58,9 @@ class Customer < ApplicationRecord
     gopay_update = result[:credit].to_f
 
     self.update(gopay: gopay_update) if gopay != gopay_update
+  end
+
+  def email_changed?
+    changed.include?("email")
   end
 end

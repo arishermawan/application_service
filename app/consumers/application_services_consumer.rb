@@ -2,23 +2,26 @@ class ApplicationServicesConsumer < Racecar::Consumer
   subscribes_to "applicationServices"
 
   def process(message)
+    puts "-------------#{message.value}--------------------"
     array = message.value.split('-->')
     if array.first == "PATCH"
-      order_value = eval(array.second)
-      order = Order.find(order_value[:order_id])
-      status = 0
-      if order_value[:driver_id].to_s.empty?
-        status = 3
-      else
-        status = 1
-      end
+      values = eval(array.second)
+      order = Order.find(values[:order_id])
+      status = values[:driver_id].to_s.empty? ? 3 : 1
+      order.update(driver_id: values[:driver_id], status: status)
 
-      order.update(driver_id: order_value[:driver_id], status: status)
+    elsif array.first == "UPDATEGOPAY"
+      values = eval(array.second)
+      user_type = values[:user_type]
+      user = user_type.constantize.find(values[:user_id])
+
+      user.valid?
+      puts "#{user.errors.full_messages}"
+      user.update(gopay:values[:credit])
+      puts "#{user.errors.full_messages}"
+      
     end
-    puts "-----------------------------#{message.value}--------------------------------"
-    puts "-----------------------------#{message.value}--------------------------------"
-    puts "-----------------------------#{message.value}--------------------------------"
-    puts "-----------------------------#{message.value}--------------------------------"
+
     sleep(5)
   end
 

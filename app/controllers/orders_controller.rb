@@ -1,5 +1,7 @@
 class OrdersController < ApplicationController
-  before_action :set_order, only: [:show]
+  before_action :set_order, only: [:show, :edit, :update]
+  before_action :logged_in_customer
+  before_action :correct_driver, only:[:edit]
 
   def index
     @orders = Order.all
@@ -54,6 +56,20 @@ class OrdersController < ApplicationController
     end
   end
 
+  def edit
+    @order = Order.find(params[:id])
+  end
+
+  def update
+    if @order.update_attributes(status_params)
+      @order.update_to_transaction_services
+      flash[:success] = "Job Status Updated!!"
+      redirect_to @order
+    else
+      render 'edit'
+    end
+  end
+
   private
 
   def set_order
@@ -61,6 +77,23 @@ class OrdersController < ApplicationController
   end
 
   def order_params
-    params.require(:order).permit(:pickup, :destination, :payment, :distance, :service, :total)
+    params.require(:order).permit(:pickup, :destination, :payment, :distance, :service, :total, :status)
   end
+
+  def status_params
+    params.require(:order).permit(:status)
+  end
+
+  def logged_in_customer
+    unless logged_in?
+      flash[:danger] = "Please log in."
+      redirect_to login_url
+    end
+  end
+
+  def correct_driver
+    @order = Order.find(params[:id])
+    redirect_to(root_url) unless @order.driver == @current_user
+  end
+
 end

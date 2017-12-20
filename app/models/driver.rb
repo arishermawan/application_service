@@ -5,7 +5,7 @@ class Driver < ApplicationRecord
 
   has_secure_password
   before_save { email.downcase! }
-  before_update { self.assign_location }
+  before_update :assign_location, if: :location_updated?
 
   enum service: {
     "goride" => 0,
@@ -22,7 +22,7 @@ class Driver < ApplicationRecord
   validates :service, presence: true
   validates :location, presence: true, on: :update, if: :location_updated?
 
-  validates_with LocationValidator
+  validates_with LocationValidator, if: :location_updated?
 
   def get_geocode
     result = ''
@@ -32,10 +32,7 @@ class Driver < ApplicationRecord
     end
     if !result.empty?
       self.location_id = result[:id]
-      hash = {}
-      hash[:coordinate] = result[:coordinate]
-      hash[:address] = result[:address]
-      result = hash
+      result = result[:address]
     end
     result
   end
@@ -54,10 +51,7 @@ class Driver < ApplicationRecord
       result = find_location
     end
     if !result.empty?
-      hash = {}
-      hash[:coordinate] = result[:coordinate]
-      hash[:address] = result[:address]
-      result = hash
+      result = result[:address]
     end
     result
   end
@@ -73,19 +67,19 @@ class Driver < ApplicationRecord
     res.body = eval(res.body)
   end
 
-  def address
-    if !location.nil?
-      address = eval(location)
-      address[:address]
-    end
-  end
+  # def address
+  #   if !location.nil?
+  #     address = eval(location)
+  #     address[:address]
+  #   end
+  # end
 
-  def coordinate
-    if !location.nil?
-      address = eval(location)
-      coord = eval(address[:coordinate])
-    end
-  end
+  # def coordinate
+  #   if !location.nil?
+  #     address = eval(location)
+  #     coord = eval(address[:coordinate])
+  #   end
+  # end
 
   def assign_location
     self.location = self.get_geocode.to_json if !location.nil?
