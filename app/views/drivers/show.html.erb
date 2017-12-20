@@ -1,7 +1,57 @@
-<h1>Welcome Driver</h1>
-<h1><%= @driver.name %></h1>
-<%= @driver.email %>
-<%= @driver.phone %>
-<%= @driver.location %>
-<%= @driver.location_id %>
--------<%= @driver.gopay %>-----------
+<h1>Welcome, <%= @driver.name.capitalize %></h1>
+<h3>GOPAY ID : ---- <%= @driver.gopay_id %> ------</h3>
+<h3>GOPAY ID : ---- <%= @driver.gopay %> ------</h3>
+
+<% if !@driver.orders.nil? %>
+  <% if !@driver.orders.last.nil? %>
+    <% if  @driver.orders.last.status== 'driver found' %>
+      <div class="alert alert-success"> YOU HAVE NEW JOB, PLEASE CONFIRM IT AFTER FINISHED YOUR JOB &nbsp; &nbsp; &nbsp; <%= link_to 'NEW ORDER', edit_order_path(@driver.orders.last), :class => "btn btn-primary btn-sm", :role => "button" %> </div>
+      <% end %>
+  <% end %>
+<% end %>
+
+<% if @driver.location_id.to_s.empty? %>
+  <div class="alert alert-warning"> PLEASE SET YOUR LOCATION FOR BID YOUR JOB &nbsp; &nbsp; &nbsp; <%= link_to 'SET LOCATION', set_location_path, :class => "btn btn-primary btn-sm", :role => "button" %> </div>
+<% end %>
+
+
+<div class="row">
+  <div class="col-sm-3 col-md-3">
+    <div class="thumbnail">
+      <%=image_tag('profile.jpg') %>
+      <div class="caption">
+        <%= link_to 'PROFILE', driver_profile_path, :class => "btn btn-success btn-block", :role => "button" %>
+      </div>
+    </div>
+  </div>
+
+    <div class="col-sm-3 col-md-3">
+    <div class="thumbnail">
+      <%=image_tag('gopay.jpg') %>
+      <div class="caption">
+        <%= link_to 'GOPAY', driver_gopay_path, :class => "btn btn-success btn-block", :role => "button" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-3 col-md-3">
+    <div class="thumbnail">
+       <%=image_tag('set_location.jpg') %>
+      <div class="caption">
+        <%= link_to 'SET LOCATION', location_path, :class => "btn btn-success btn-block", :role => "button" %>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="col-sm-3 col-md-3">
+    <div class="thumbnail">
+       <%=image_tag('order-history.jpg') %>
+      <div class="caption">
+        <center>
+        <%= link_to 'ORDER HISTORY', orders_driver_path, :class => "btn btn-success btn-block", :role => "button" %>
+        </center>
+      </div>
+    </div>
+  </div>
+</div>

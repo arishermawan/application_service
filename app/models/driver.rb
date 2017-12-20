@@ -1,11 +1,11 @@
 class Driver < ApplicationRecord
 
-  belongs_to :area, optional:true
   has_many :orders
 
   has_secure_password
   before_save { email.downcase! }
   before_update :assign_location, if: :location_updated?
+  after_create :set_gopay
 
   enum service: {
     "goride" => 0,
@@ -67,22 +67,24 @@ class Driver < ApplicationRecord
     res.body = eval(res.body)
   end
 
-  # def address
-  #   if !location.nil?
-  #     address = eval(location)
-  #     address[:address]
-  #   end
-  # end
+  def create_gopay_service(credit)
+    uri = URI('http://localhost:3001/gopays')
+    req = Net::HTTP::Post.new(uri)
+    req.set_form_data('credit' => credit, 'user_id' => id, 'user_type' => self.class.to_s )
+    res = Net::HTTP.start(uri.hostname, uri.port) do |http|
+      http.request(req)
+    end
+    res.body = eval(res.body)
+  end
 
-  # def coordinate
-  #   if !location.nil?
-  #     address = eval(location)
-  #     coord = eval(address[:coordinate])
-  #   end
-  # end
 
   def assign_location
     self.location = self.get_geocode.to_json if !location.nil?
+  end
+
+  def set_gopay
+    gopay = create_gopay_service(0)
+    self.update(gopay_id: gopay[:id])
   end
 
   def location_updated?

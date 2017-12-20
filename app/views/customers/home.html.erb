@@ -1,13 +1,18 @@
-<h1>Welcome, <%= @customer.name.capitalize %></h1>
-<h3>GOPAY ID : ---- <%= @customer.gopay_id %> ------</h3>
-<h3>GOPAY ID : ---- <%= @customer.gopay %> ------</h3>
+<h1>Welcome Customers</h1>
+<h1><%= @customer.name %></h1>
+<%= @customer.email %>
+<%= @customer.phone %>
+<%= @customer.gopay %>
+GOPAY ID : ---- <%= @customer.gopay_id %> ------
+
+
 
 <div class="row">
   <div class="col-sm-3 col-md-3">
     <div class="thumbnail">
       <%=image_tag('gopay.jpg') %>
       <div class="caption">
-        <%= link_to 'GO PAY', customer_gopay_path, :class => "btn btn-success btn-block", :role => "button" %>
+        <%= link_to 'GO PAY', topup_path, :class => "btn btn-success btn-block", :role => "button" %>
       </div>
     </div>
   </div>

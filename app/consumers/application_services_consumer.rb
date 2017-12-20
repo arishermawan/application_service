@@ -16,10 +16,9 @@ class ApplicationServicesConsumer < Racecar::Consumer
       user = user_type.constantize.find(values[:user_id])
 
       user.valid?
-      puts "#{user.errors.full_messages}"
+
       user.update(gopay:values[:credit])
-      puts "#{user.errors.full_messages}"
-      
+
     end
 
     sleep(5)

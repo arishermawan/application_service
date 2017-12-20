@@ -1,6 +1,6 @@
 class CustomersController < ApplicationController
-  before_action :logged_in_customer, only: [:topup, :show, :edit, :update]
-  before_action :correct_customer,   only: [:topup, :show, :edit, :update]
+  before_action :logged_in_customer, only: [:topup, :show, :profile, :edit, :update]
+  before_action :correct_customer,   only: [:topup, :show, :profile, :edit, :update]
 
   def index
     @customers = Customer.paginate(page:params[:page])
@@ -12,6 +12,14 @@ class CustomersController < ApplicationController
       redirect_to current_user
     end
   @customer = Customer.new
+  end
+
+  def profile
+    @customer = Customer.find(params[:id])
+  end
+
+  def gopay
+    @customer = Customer.find(params[:id])
   end
 
   def show
@@ -77,7 +85,7 @@ class CustomersController < ApplicationController
   private
 
     def customer_params
-      params.require(:customer).permit(:name, :email, :phone, :password, :password_confirmation)
+      params.require(:customer).permit(:name, :email, :phone, :password, :password_confirmation, :gopay_id)
     end
 
     def gopay_params

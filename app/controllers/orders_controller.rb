@@ -62,6 +62,7 @@ class OrdersController < ApplicationController
 
   def update
     if @order.update_attributes(status_params)
+      @order.driver.update_attributes(location_id: nil)
       @order.update_to_transaction_services
       flash[:success] = "Job Status Updated!!"
       redirect_to @order

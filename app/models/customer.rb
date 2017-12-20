@@ -4,6 +4,7 @@ class Customer < ApplicationRecord
   has_many :orders
 
   before_save { email.downcase! if email_changed? }
+  after_create :set_gopay
 
   VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-.]+\.[a-z]+\z/i
   validates :name, presence: true, length: { maximum: 50 }
@@ -36,6 +37,11 @@ class Customer < ApplicationRecord
       http.request(req)
     end
     res.body = eval(res.body)
+  end
+
+  def set_gopay
+    gopay = create_gopay_service(0)
+    self.update(gopay_id: gopay[:id])
   end
 
   def add_gopay_service(credit)

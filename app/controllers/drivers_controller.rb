@@ -9,7 +9,7 @@ class DriversController < ApplicationController
 
   def new
     if logged_in?
-      redirect_to current_driver
+      redirect_to current_user
     end
     @driver = Driver.new
   end
@@ -19,6 +19,18 @@ class DriversController < ApplicationController
   end
 
   def edit
+    @driver = Driver.find(params[:id])
+  end
+
+  def gopay
+    @driver = Driver.find(params[:id])
+  end
+
+  def profile
+    @driver = Driver.find(params[:id])
+  end
+
+  def location
     @driver = Driver.find(params[:id])
   end
 
