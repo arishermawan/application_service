@@ -23,15 +23,18 @@ RSpec.describe CustomersController, type: :controller do
   end
 
   describe 'GET #show' do
+    before :each do
+      @customer = create(:customer)
+      session[:user_id] = @customer.id
+      session[:user_type] = 'Customer'
+    end
     it 'assigns the requested customer to @customers' do
-      customer = create(:customer)
-      get :show, params:{id: customer}
-      expect(assigns(:customer)).to eq customer
+      get :show, params:{id: @customer}
+      expect(assigns(:customer)).to eq @customer
     end
 
     it 'render the show template' do
-      customer = create(:customer)
-      get :show, params:{id: customer}
+      get :show, params:{id: @customer}
       expect(response).to render_template :show
     end
   end
@@ -154,8 +157,7 @@ RSpec.describe CustomersController, type: :controller do
 
   describe 'PATCH #commit_topup' do
     before :each do
-      @gopay = create(:gopay_credit, user_id:1, credit:50000)
-      @customer = create(:customer, id:1, gopay: 50000)
+      @customer = create(:customer, id:1, gopay: 0.0)
       session[:user_id] = @customer.id
       session[:user_type] = 'Customer'
     end
@@ -169,7 +171,7 @@ RSpec.describe CustomersController, type: :controller do
       it "changes @customer's gopay balance" do
         patch :commit_topup, params: {id: @customer, customer: { gopay:50000 } }
         @customer.reload
-        expect(@customer.gopay).to eq(100000)
+        expect(@customer.gopay).to eq(50000)
       end
 
       it "redirects to the customer" do
@@ -190,23 +192,4 @@ RSpec.describe CustomersController, type: :controller do
       end
     end
   end
-
-  # describe 'DELETE #destroy' do
-  #   before :each do
-  #     @custmer = create(:customer)
-  #   end
-
-  #   it "delete the customer from the database" do
-  #     expect{
-  #       delete :destroy, params: { id: @customer }
-  #     }.to change(Customer, :count).by(-1)
-
-  #   end
-
-  #   it "redirects to the customer#index" do
-  #     delete :destroy, params: { id: @customer }
-  #     expect(response).to redirect_to customers_url
-  #   end
-  # end
-
 end

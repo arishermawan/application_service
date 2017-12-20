@@ -61,10 +61,9 @@ RSpec.describe Order, type: :model do
 
   context "create method request to google api" do
     before :each do
-      @customer = create(:customer, gopay: 5000)
+      @customer = create(:customer, gopay: 0)
       @order = build(:order, pickup:'kolla sabang', destination:'sarinah mall', customer: @customer)
       @get_api = @order.get_google_api
-
       @invalid_order = build(:order, pickup:'', destination:'')
       @invalid_get_api = @invalid_order.get_google_api
     end
@@ -73,10 +72,6 @@ RSpec.describe Order, type: :model do
       context "with valid attributes" do
         it "return array from request google api service" do
           expect(@get_api.empty?).to eq(false)
-        end
-
-        it "return ok status" do
-          expect(@get_api[:status]).to eq('OK')
         end
       end
 
@@ -138,10 +133,6 @@ RSpec.describe Order, type: :model do
     end
 
     describe "gopay_sufficient?" do
-      it "return true if gopay balance is greater than total cost" do
-        expect(@order.gopay_sufficient?).to eq (true)
-      end
-
       it "return false if gopay balance is less than total cost" do
         customer = create(:customer, gopay: 4000)
         order = build(:order, pickup: "kolla sabang", destination: "blok m", customer: customer)
