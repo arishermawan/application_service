@@ -7,6 +7,7 @@
     <td>Distance</td>
     <td>Total</td>
     <td>Driver</td>
+    <td>Service</td>
     <td>Status</td>
     <td>Action</td>
   </tr>
@@ -20,6 +21,7 @@
     <td><%= o.distance %></td>
     <td><%= number_to_currency(o.total, unit: "Rp ", delimiter: ".", separator: ",")  %></td>
     <td><%= o.driver.name if !o.driver_id.nil?  %></td>
+    <td><%= o.service %></td>
     <td><%= o.status %></td>
     <td>  <%= link_to 'Show', o %>
     </td>

@@ -8,7 +8,12 @@
       </tr>
 
       <tr>
-        <td><h1><%= @driver.location.gsub('"','').split.map(&:capitalize).join(' ') if !@driver.location.nil? %></td>
+        <td>
+        <% if @driver.location_id.to_s.empty? %>
+          <h1>NOT AVAILABLE</h1>
+        <% else %>
+        <h1><%= @driver.location.gsub('"','').split.map(&:capitalize).join(' ') if !@driver.location.nil? %></h1></td>
+        <% end %>
       </tr>
     </table>
     <br>

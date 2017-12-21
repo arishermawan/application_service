@@ -1,6 +1,4 @@
 <h1>Welcome, <%= @driver.name.capitalize %></h1>
-<h3>GOPAY ID : ---- <%= @driver.gopay_id %> ------</h3>
-<h3>GOPAY ID : ---- <%= @driver.gopay %> ------</h3>
 
 <% if !@driver.orders.nil? %>
   <% if !@driver.orders.last.nil? %>
@@ -14,7 +12,27 @@
   <div class="alert alert-warning"> PLEASE SET YOUR LOCATION FOR BID YOUR JOB &nbsp; &nbsp; &nbsp; <%= link_to 'SET LOCATION', set_location_path, :class => "btn btn-primary btn-sm", :role => "button" %> </div>
 <% end %>
 
-
+<% if @driver.location_id.to_s.empty? %>
+  <% if !@driver.orders.nil? %>
+    <% if !@driver.orders.last.nil? %>
+      <div class="alert alert-success">
+      <div class="row">
+      <div class="col-sm-6 col-md-6">
+        OR SET YOUR LOCATION TO YOUR LAST JOB LOCATION
+      </div>
+      <div class="col-sm-2 col-md-2">
+        <% provide(:button_text, 'SET LOCATION') %>
+          <%= form_for(@driver, url:commit_location_path) do |f| %>
+          <%= render 'error_messages' %>
+          <%= f.hidden_field :location, value: @driver.orders.last.destination %>
+          <%= f.submit yield(:button_text), class: "btn btn-primary btn-sm" %>
+          </div>
+      </div>
+      </div>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
 <div class="row">
   <div class="col-sm-3 col-md-3">
     <div class="thumbnail">

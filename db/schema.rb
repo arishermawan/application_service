@@ -15,12 +15,6 @@ ActiveRecord::Schema.define(version: 20171219040335) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
-  create_table "areas", force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
   create_table "customers", force: :cascade do |t|
     t.string "name"
     t.string "email"
@@ -47,23 +41,6 @@ ActiveRecord::Schema.define(version: 20171219040335) do
     t.integer "location_id"
   end
 
-  create_table "gopay_credits", force: :cascade do |t|
-    t.decimal "credit", default: "0.0"
-    t.integer "user_id"
-    t.integer "user_type"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "locations", force: :cascade do |t|
-    t.string "address"
-    t.string "coordinate"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.bigint "area_id"
-    t.index ["area_id"], name: "index_locations_on_area_id"
-  end
-
   create_table "orders", force: :cascade do |t|
     t.string "pickup"
     t.string "destination"
@@ -80,18 +57,6 @@ ActiveRecord::Schema.define(version: 20171219040335) do
     t.index ["driver_id"], name: "index_orders_on_driver_id"
   end
 
-  create_table "users", force: :cascade do |t|
-    t.string "name"
-    t.string "email"
-    t.string "phone"
-    t.decimal "gopay"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "password_digest"
-    t.index ["email"], name: "index_users_on_email", unique: true
-  end
-
-  add_foreign_key "locations", "areas"
   add_foreign_key "orders", "customers"
   add_foreign_key "orders", "drivers"
 end
