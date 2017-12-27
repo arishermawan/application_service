@@ -1,6 +1,6 @@
 class CustomersController < ApplicationController
-  before_action :logged_in_customer, only: [:edit, :update]
-  before_action :correct_customer,   only: [:edit, :update]
+  before_action :logged_in_customer, only: [:topup, :show, :profile, :edit, :update]
+  before_action :correct_customer,   only: [:topup, :show, :profile, :edit, :update]
 
   def index
     @customers = Customer.paginate(page:params[:page])
@@ -12,6 +12,14 @@ class CustomersController < ApplicationController
       redirect_to current_user
     end
   @customer = Customer.new
+  end
+
+  def profile
+    @customer = Customer.find(params[:id])
+  end
+
+  def gopay
+    @customer = Customer.find(params[:id])
   end
 
   def show
@@ -57,8 +65,13 @@ class CustomersController < ApplicationController
 
     credit = params[:customer][:gopay]
     if credit.to_i != 0 && !credit.match(/[^0-9]/)
-      new_credit = @customer.topup_gopay(credit.to_i)
-      params[:customer][:gopay] = new_credit
+      if @customer.gopay_id.nil?
+        new_credit = @customer.create_gopay_service(credit.to_f)
+        params[:customer][:gopay_id] = new_credit[:id]
+      else
+        new_credit = @customer.add_gopay_service(credit.to_f)
+        params[:customer][:gopay] = new_credit[:credit]
+      end
     end
 
     if @customer.update(gopay_params)
@@ -72,11 +85,11 @@ class CustomersController < ApplicationController
   private
 
     def customer_params
-      params.require(:customer).permit(:name, :email, :phone, :password, :password_confirmation)
+      params.require(:customer).permit(:name, :email, :phone, :password, :password_confirmation, :gopay_id)
     end
 
     def gopay_params
-      params.require(:customer).permit(:gopay)
+      params.require(:customer).permit(:gopay, :gopay_id)
     end
 
     def logged_in_customer

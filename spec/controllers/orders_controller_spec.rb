@@ -2,6 +2,12 @@ require 'rails_helper'
 
 RSpec.describe OrdersController, type: :controller do
 
+  before :each do
+    customer = create(:customer)
+    session[:user_id] = customer.id
+    session[:user_type] = 'Customer'
+  end
+
   describe 'GET #index' do
 
     it "populates an array of all orders" do
@@ -72,7 +78,7 @@ RSpec.describe OrdersController, type: :controller do
     context "with valid attributes" do
       it "renders the :confirm template" do
         post :check, params:{ order: {pickup: "sarinah", destination: "kolla sabang", payment: "cash", service: "goride"} }
-        expect(response).to render_template :goride
+        expect(response).to render_template :confirm
       end
     end
 
@@ -96,15 +102,13 @@ RSpec.describe OrdersController, type: :controller do
   end
 
   describe 'POST #create' do
-    # context "with valid attributes" do
-    #   it "save the new order in the database" do
-    #     expect{
-    #     post :create, params:{ order: attributes_for(:order) }
-    #     }.to change(Order, :count).by(1)
-    #   end
-
-    #   it "sends order confirmation with apache kafka"
-    # end
+    context "with valid attributes" do
+      it "save the new order in the database" do
+        expect{
+        post :create, params:{ order: attributes_for(:order) }
+        }.to change(Order, :count).by(1)
+      end
+    end
 
     context "with invalid attributes" do
       it "does not save the new order in the database " do

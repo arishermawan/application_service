@@ -1,0 +1,30 @@
+<table class="table">
+  <tr>
+    <td>Id</td>
+    <td>Pickup</td>
+    <td>Destination</td>
+    <td>Payment</td>
+    <td>Distance</td>
+    <td>Total</td>
+    <td>Driver</td>
+    <td>Service</td>
+    <td>Status</td>
+    <td>Action</td>
+  </tr>
+
+  <% @orders.each do|o| %>
+  <tr class="<%= cycle('list_line_odd','list_line_even')%>">
+    <td><%= o.id %></td>
+    <td><%= o.pickup %></td>
+    <td><%= o.destination %></td>
+    <td><%= o.payment %></td>
+    <td><%= o.distance %></td>
+    <td><%= number_to_currency(o.total, unit: "Rp ", delimiter: ".", separator: ",")  %></td>
+    <td><%= o.driver.name if !o.driver_id.nil?  %></td>
+    <td><%= o.service %></td>
+    <td><%= o.status %></td>
+    <td>  <%= link_to 'Show', o %>
+    </td>
+  </tr>
+  <% end %>
+</table>

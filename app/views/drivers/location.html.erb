@@ -1,0 +1,25 @@
+<h1 style="text-align: center;">Your Bid Location</h1>
+
+<div class="row">
+  <div class="col-sm-6 col-sm-offset-3">
+    <table class="table" style="text-align: center;">
+      <tr>
+        <td>Your Current Location:</td>
+      </tr>
+
+      <tr>
+        <td>
+        <% if @driver.location_id.to_s.empty? %>
+          <h1>NOT AVAILABLE</h1>
+        <% else %>
+        <h1><%= @driver.location.gsub('"','').split.map(&:capitalize).join(' ') if !@driver.location.nil? %></h1></td>
+        <% end %>
+      </tr>
+    </table>
+    <br>
+    <br>
+    <br>
+    <%= link_to 'SET NEW LOCATION', set_location_path, :class => "btn btn-success btn-block", :role => "button" %>
+    <%= link_to 'Back', root_url, :class => "btn btn-primary btn-block", :role => "button" %>
+  </div>
+</div>

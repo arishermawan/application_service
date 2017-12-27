@@ -13,7 +13,7 @@ FactoryGirl.define do
     association :driver
   end
 
-  factory :invalid_order, parent: :user do
+  factory :invalid_order, parent: :order do
     pickup ''
     destination ''
     payment nil

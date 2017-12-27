@@ -1,6 +1,6 @@
     <header class="navbar navbar-fixed-top navbar-inverse">
       <div class="container">
-        <%= link_to "go-jek web services app", '#', id:"logo" %>
+        <%= link_to "go-jek web apps", '#', id:"logo" %>
         <nav>
           <ul class="nav navbar-nav navbar-right">
             <li><%= link_to "Home", "#{}" %></li>
@@ -12,7 +12,9 @@
                   Account <b class="caret"></b>
                 </a>
                 <ul class="dropdown-menu">
-                  <li><%= link_to "Profile", current_user %></li>
+                  <% if session[:user_type] == 'Customer' %>
+                  
+                  <% end %>
                   <li><%= link_to "GO-PAY", "#" %></li>
                   <li><%= link_to "Settings", '#' %></li>
                   <li class="divider"></li>

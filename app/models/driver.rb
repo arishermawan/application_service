@@ -1,11 +1,11 @@
 class Driver < ApplicationRecord
 
-  belongs_to :area, optional:true
   has_many :orders
 
   has_secure_password
   before_save { email.downcase! }
-  before_update { self.assign_location }
+  before_update :assign_location, if: :location_updated?
+  after_create :set_gopay
 
   enum service: {
     "goride" => 0,
@@ -21,48 +21,74 @@ class Driver < ApplicationRecord
   validates :service, inclusion: services.keys
   validates :service, presence: true
   validates :location, presence: true, on: :update, if: :location_updated?
-  validates_with LocationValidator
 
-
-  def api_key
-    api = 'AIzaSyAT3fcxh_TKujSW6d6fP9cUtrexk0eEvAE'
-  end
+  validates_with LocationValidator, if: :location_updated?
 
   def get_geocode
     result = ''
-    find_location = Location.find_by(address: location)
+    find_location = set_location(location, id, location_id, service)
     if !find_location.nil?
       result = find_location
-      result = result.attributes
-    else
-      result = Location.get_location(location)
-      result = result.attributes if !result.to_s.empty?
     end
     if !result.empty?
-      self.area_id = result['area_id']
-      hash = {}
-      hash[:coordinate] = result['coordinate']
-      hash[:address] = result['address']
-      result = hash
+      self.location_id = result[:id]
+      result = result[:address]
     end
     result
   end
 
-  def address
-    address = eval(location)
-    address[:address]
+  def check_geocode
+    result = ''
+    uri = URI('http://localhost:3002/locations/address')
+    req = Net::HTTP::Post.new(uri)
+    req.set_form_data('location' => location )
+
+    res = Net::HTTP.start(uri.hostname, uri.port) do |http|
+      http.request(req)
+    end
+    find_location = eval(res.body)
+    if !find_location.nil?
+      result = find_location
+    end
+    if !result.empty?
+      result = result[:address]
+    end
+    result
   end
 
-  def coordinate
-    address = eval(location)
-    coord = eval(address[:coordinate])
+  def set_location(address, driver, location_id, service)
+    uri = URI('http://localhost:3002/locations/driver')
+    req = Net::HTTP::Post.new(uri)
+    req.set_form_data('address' => address, 'driver_id' => id, 'location_id' => location_id, 'service'=>service )
+
+    res = Net::HTTP.start(uri.hostname, uri.port) do |http|
+      http.request(req)
+    end
+    res.body = eval(res.body)
   end
+
+  def create_gopay_service(credit)
+    uri = URI('http://localhost:3001/gopays')
+    req = Net::HTTP::Post.new(uri)
+    req.set_form_data('credit' => credit, 'user_id' => id, 'user_type' => self.class.to_s )
+    res = Net::HTTP.start(uri.hostname, uri.port) do |http|
+      http.request(req)
+    end
+    res.body = eval(res.body)
+  end
+
 
   def assign_location
     self.location = self.get_geocode.to_json if !location.nil?
   end
 
+  def set_gopay
+    gopay = create_gopay_service(0)
+    self.update(gopay_id: gopay[:id])
+  end
+
   def location_updated?
     changed.include?("location")
   end
+
 end

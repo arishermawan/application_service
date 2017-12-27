@@ -1,6 +1,6 @@
 class DriversController < ApplicationController
-  before_action :logged_in_driver, only: [:edit, :update]
-  before_action :correct_driver,   only: [:edit, :update]
+  before_action :logged_in_driver, only: [:set_location, :show, :edit, :update]
+  before_action :correct_driver,   only: [:set_location, :show, :edit, :update]
 
   def index
     @drivers = Driver.paginate(page:params[:page])
@@ -9,9 +9,9 @@ class DriversController < ApplicationController
 
   def new
     if logged_in?
-      redirect_to current_driver
+      redirect_to current_user
     end
-  @driver = Driver.new
+    @driver = Driver.new
   end
 
   def show
@@ -19,6 +19,18 @@ class DriversController < ApplicationController
   end
 
   def edit
+    @driver = Driver.find(params[:id])
+  end
+
+  def gopay
+    @driver = Driver.find(params[:id])
+  end
+
+  def profile
+    @driver = Driver.find(params[:id])
+  end
+
+  def location
     @driver = Driver.find(params[:id])
   end
 
@@ -55,7 +67,7 @@ class DriversController < ApplicationController
   def commit_location
     @driver = Driver.find(params[:id])
 
-    if @driver.update_attributes(location_params)
+    if @driver.update(location_params)
       flash[:success] = "Location Update"
       redirect_to @driver
     else
@@ -84,4 +96,5 @@ class DriversController < ApplicationController
       @driver = Driver.find(params[:id])
       redirect_to(root_url) unless @driver == current_user
     end
+
 end

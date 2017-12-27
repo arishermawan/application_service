@@ -2,7 +2,16 @@
 <div class="row">
   <div class="col-sm-6 col-sm-offset-3">
   <h2>Your Order is Succeed</h2>
-  <h3>Please wait, We're searching a driver for you</h3>
+  <% if @order.status == "driver found" %>
+    <h3>Driver Found!!! <%= Driver.find(@order.driver_id).name %> will drive yo to <%= @order.destination %></h3>
+  <% elsif @order.status == "complete" %>
+    <h3>Order was Complete</h3>
+  <% elsif @order.status == "cancel" %>
+    <h3>We're sorry, we can't found driver in your pickup area, your order has been canceled</h3>
+  <% else %>
+    <h3>Please wait, We're searching a driver for you</h3>
+  <% end %>
+
 
 
   <table class="table">
@@ -18,7 +27,7 @@
     </tr>
 
     <tr>
-      <td>Pickup Location</td>
+      <td>Destination</td>
       <td><%= @order.destination %></td>
     </tr>
 
@@ -30,6 +39,15 @@
     <tr>
       <td>Payment Type</td>
       <td><%= @order.payment.upcase %></td>
+    </tr>
+
+    <tr>
+      <td>Driver</td>
+      <% if @order.driver_id.nil?  %>
+      <td><%= @order.status %></td>
+      <% else %>
+      <td><%= Driver.find(@order.driver_id).name %></td>
+      <% end %>
     </tr>
 
 

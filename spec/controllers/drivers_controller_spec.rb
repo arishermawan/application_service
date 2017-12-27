@@ -22,15 +22,20 @@ RSpec.describe DriversController, type: :controller do
   end
 
   describe 'GET #show' do
+    before :each do
+      @driver = create(:driver)
+      session[:user_id] = @driver.id
+      session[:user_type] = 'Driver'
+    end
     it 'assigns the requested driver to @drivers' do
       driver = create(:driver)
-      get :show, params:{id: driver}
-      expect(assigns(:driver)).to eq driver
+      get :show, params:{id: @driver}
+      expect(assigns(:driver)).to eq @driver
     end
 
     it 'render the show template' do
       driver = create(:driver)
-      get :show, params:{id: driver}
+      get :show, params:{id: @driver}
       expect(response).to render_template :show
     end
   end

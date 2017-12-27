@@ -1,5 +1,43 @@
-<h1>Welcome Customers</h1>
-<h1><%= @customer.name %></h1>
-<%= @customer.email %>
-<%= @customer.phone %>
-<%= @customer.gopay %>
+<h1>Hello, <%= @customer.name.capitalize %></h1>
+
+<div class="row">
+  <div class="col-sm-3 col-md-3">
+    <div class="thumbnail">
+      <%=image_tag('gopay.jpg') %>
+      <div class="caption">
+        <%= link_to 'GO PAY', customer_gopay_path, :class => "btn btn-success btn-block", :role => "button" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-3 col-md-3">
+    <div class="thumbnail">
+       <%=image_tag('goride.png') %>
+      <div class="caption">
+        <%= link_to 'GO RIDE', orders_goride_path, :class => "btn btn-success btn-block", :role => "button" %>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-3 col-md-3">
+    <div class="thumbnail">
+       <%=image_tag('gocar.jpg') %>
+      <div class="caption">
+        <center>
+        <%= link_to 'GO CAR', orders_gocar_path, :class => "btn btn-success btn-block", :role => "button" %>
+        </center>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-sm-3 col-md-3">
+    <div class="thumbnail">
+       <%=image_tag('order-history.jpg') %>
+      <div class="caption">
+        <center>
+        <%= link_to 'ORDER HISTORY', orders_customer_path, :class => "btn btn-success btn-block", :role => "button" %>
+        </center>
+      </div>
+    </div>
+  </div>
+</div>
